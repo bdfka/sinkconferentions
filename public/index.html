@@ -555,7 +555,7 @@
 </section>
 
 <footer class="footer">
-  © 2026 SinkConferentions · Сделано на GitHub + Render + Supabase
+  © 2026 SinkConferentions · Сделано на bdfkaHost and bdfkaBase
 </footer>
 
 <!-- Модальное окно имени -->
@@ -594,10 +594,10 @@ async function checkServer() {
     const res = await fetch('/api/health', { cache: 'no-store' });
     if (!res.ok) throw new Error('bad');
     const data = await res.json();
-    text.textContent = `Сервер онлайн · ${data.rooms || 0} комнат · Supabase: ${data.supabase ? '✅' : '⚠️'}`;
+    text.textContent = `Сервис работает ·`;
     badge.classList.remove('offline');
   } catch (e) {
-    text.textContent = 'Сервер просыпается… (Render Free, до 30 сек)';
+    text.textContent = 'Сервис перезапускаеться (Подождите 30 сек)';
     badge.classList.add('offline');
     // Повторим через 5 секунд
     setTimeout(checkServer, 5000);
