@@ -6,13 +6,14 @@
 <title>Комната — SinkConferentions</title>
 <link rel="stylesheet" href="styles.css" />
 <style>
-/* ---------- Специфичные стили комнаты ---------- */
+/* ============ ROOM LAYOUT ============ */
 html,body{height:100%;overflow:hidden}
 
 .room{
   display:grid;
   grid-template-rows:1fr;
   height:100vh;
+  position:relative;
   transition:padding-right .35s cubic-bezier(.4,0,.2,1);
 }
 .room.chat-open{padding-right:360px}
@@ -25,6 +26,7 @@ html,body{height:100%;overflow:hidden}
     var(--bg);
 }
 
+/* ============ TOPBAR ============ */
 .topbar{
   position:absolute;top:0;left:0;right:0;
   padding:16px 20px;
@@ -64,7 +66,12 @@ html,body{height:100%;overflow:hidden}
   box-shadow:0 0 10px var(--green);
   animation:pulse 2s infinite;
 }
+@keyframes pulse{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:.5;transform:scale(1.25)}
+}
 
+/* ============ VIDEO GRID ============ */
 .video-grid{
   position:absolute;
   inset:70px 16px 130px 16px;
@@ -130,6 +137,7 @@ html,body{height:100%;overflow:hidden}
   75%{transform:rotate(12deg)}
 }
 
+/* ============ CONTROLS ============ */
 .controls{
   position:absolute;bottom:20px;left:50%;
   transform:translateX(-50%);
@@ -152,8 +160,10 @@ html,body{height:100%;overflow:hidden}
   display:grid;place-items:center;
   transition:all .2s cubic-bezier(.34,1.56,.64,1);
   position:relative;
+  font-size:20px;
 }
 .ctrl:hover{background:rgba(255,107,53,.2);transform:translateY(-2px)}
+.ctrl:active{transform:translateY(0) scale(.95)}
 .ctrl.active{background:rgba(255,107,53,.25);color:var(--orange-light)}
 .ctrl.off{background:rgba(231,76,60,.25);color:#ff8b7a}
 .ctrl.danger{background:rgba(231,76,60,.9);color:#fff}
@@ -169,7 +179,7 @@ html,body{height:100%;overflow:hidden}
 .ctrl .badge.show{display:flex;animation:badgePop .3s}
 @keyframes badgePop{from{transform:scale(0)}to{transform:scale(1)}}
 
-/* Доска */
+/* ============ BOARD ============ */
 .board{
   position:absolute;
   inset:70px 16px 130px 16px;
@@ -237,7 +247,96 @@ input[type=checkbox].hidden-cb{display:none}
 input[type=checkbox].hidden-cb:checked + .switch{background:var(--orange)}
 input[type=checkbox].hidden-cb:checked + .switch::after{transform:translateX(16px)}
 
-/* Чат */
+/* ============ REACTIONS ============ */
+.reactions-layer{
+  position:absolute;inset:0;
+  pointer-events:none;overflow:hidden;z-index:18;
+}
+.floating-emoji{
+  position:absolute;font-size:44px;bottom:0;
+  animation:float 3s ease-out forwards;
+  pointer-events:none;
+}
+@keyframes float{
+  0%{transform:translateY(0) scale(.6);opacity:0}
+  15%{transform:translateY(-40px) scale(1.15);opacity:1}
+  100%{transform:translateY(-80vh) scale(.9) rotate(20deg);opacity:0}
+}
+.reaction-picker{
+  position:absolute;bottom:90px;left:50%;
+  transform:translateX(-50%);
+  background:var(--card2);
+  border:1px solid rgba(255,107,53,.3);
+  border-radius:16px;padding:10px;
+  display:flex;gap:6px;z-index:40;
+  animation:popIn .25s;
+  box-shadow:0 20px 50px rgba(0,0,0,.6);
+}
+.reaction-picker button{
+  background:transparent;border:none;
+  font-size:26px;cursor:pointer;padding:6px;
+  border-radius:10px;transition:all .2s;
+}
+.reaction-picker button:hover{
+  background:rgba(255,107,53,.2);transform:scale(1.25);
+}
+
+/* ============ ADMIN ============ */
+.admin{
+  position:absolute;top:70px;right:16px;
+  width:300px;max-height:calc(100vh - 220px);
+  background:rgba(36,23,20,.95);
+  backdrop-filter:blur(16px);
+  border:1px solid rgba(255,107,53,.3);
+  border-radius:16px;padding:16px;
+  z-index:22;display:none;flex-direction:column;gap:10px;
+  box-shadow:0 20px 50px rgba(0,0,0,.5);
+  animation:popIn .3s;
+}
+.admin.show{display:flex}
+.admin h3{
+  font-size:14px;font-weight:700;
+  color:var(--orange-light);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.admin-list{
+  overflow-y:auto;max-height:240px;
+  display:flex;flex-direction:column;gap:6px;
+}
+.admin-list::-webkit-scrollbar{width:5px}
+.admin-list::-webkit-scrollbar-thumb{background:rgba(255,107,53,.3);border-radius:3px}
+
+.admin-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 10px;background:rgba(0,0,0,.25);
+  border-radius:9px;font-size:13px;gap:6px;
+}
+.admin-row span{
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;
+}
+.admin-row .mini-btn{
+  background:rgba(255,107,53,.15);border:none;
+  color:var(--orange-light);
+  width:28px;height:28px;border-radius:7px;
+  cursor:pointer;font-size:14px;
+  display:grid;place-items:center;
+  transition:all .2s;flex-shrink:0;
+}
+.admin-row .mini-btn:hover{background:var(--orange);color:#fff}
+
+.admin-toggle{
+  background:rgba(255,107,53,.15);
+  border:1px solid rgba(255,107,53,.3);
+  color:var(--orange-light);
+  padding:8px 12px;border-radius:9px;
+  font-size:12px;cursor:pointer;font-weight:600;
+  transition:all .2s;width:100%;
+  font-family:inherit;
+}
+.admin-toggle:hover{background:var(--orange);color:#fff}
+.admin-toggle.link{text-align:center;text-decoration:none;display:block}
+
+/* ============ CHAT ============ */
 .chat{
   position:absolute;top:0;right:0;
   width:360px;height:100%;
@@ -264,7 +363,7 @@ input[type=checkbox].hidden-cb:checked + .switch::after{transform:translateX(16p
   padding:7px 14px;border:none;background:transparent;
   color:var(--muted);border-radius:7px;
   font-size:13px;font-weight:600;cursor:pointer;
-  transition:all .2s;
+  transition:all .2s;font-family:inherit;
 }
 .chat-tab.active{
   background:var(--orange);color:#fff;
@@ -317,6 +416,7 @@ input[type=checkbox].hidden-cb:checked + .switch::after{transform:translateX(16p
   background:transparent;color:var(--text);
   cursor:pointer;width:100%;text-align:left;
   font-size:13px;overflow:hidden;transition:all .2s;
+  font-family:inherit;
 }
 .poll-opt:hover{border-color:var(--orange)}
 .poll-opt.voted{border-color:var(--orange);background:rgba(255,107,53,.12)}
@@ -359,7 +459,9 @@ input[type=checkbox].hidden-cb:checked + .switch::after{transform:translateX(16p
   color:var(--orange-light);cursor:pointer;
   text-align:left;font-size:13px;
   display:flex;align-items:center;gap:6px;
+  font-family:inherit;
 }
+.dm-back:hover{background:rgba(255,107,53,.1)}
 
 .typing{
   padding:8px 16px;font-size:12px;color:var(--muted);
@@ -413,6 +515,7 @@ input[type=checkbox].hidden-cb:checked + .switch::after{transform:translateX(16p
   box-shadow:0 4px 14px var(--glow);
 }
 .send-btn:hover{transform:scale(1.06)}
+.send-btn:active{transform:scale(.94)}
 
 .attach-menu{
   position:absolute;bottom:100%;left:12px;
@@ -429,102 +532,192 @@ input[type=checkbox].hidden-cb:checked + .switch::after{transform:translateX(16p
   padding:9px 16px;border-radius:8px;
   font-size:13px;cursor:pointer;
   text-align:left;display:flex;align-items:center;gap:8px;
-  transition:background .2s;
+  transition:background .2s;font-family:inherit;
 }
 .attach-menu button:hover{background:rgba(255,107,53,.2)}
 
-.reactions-layer{
-  position:absolute;inset:0;
-  pointer-events:none;overflow:hidden;z-index:18;
+/* ============ УЧАСТНИКИ ============ */
+.participants{
+  position:absolute;top:0;right:0;
+  width:320px;height:100%;
+  background:var(--card);
+  border-left:1px solid rgba(255,107,53,.2);
+  display:flex;flex-direction:column;
+  transform:translateX(100%);
+  transition:transform .35s cubic-bezier(.4,0,.2,1);
+  z-index:26;
+  box-shadow:-10px 0 40px rgba(0,0,0,.4);
 }
-.floating-emoji{
-  position:absolute;font-size:44px;bottom:0;
-  animation:float 3s ease-out forwards;
-  pointer-events:none;
-}
-@keyframes float{
-  0%{transform:translateY(0) scale(.6);opacity:0}
-  15%{transform:translateY(-40px) scale(1.15);opacity:1}
-  100%{transform:translateY(-80vh) scale(.9) rotate(20deg);opacity:0}
-}
-.reaction-picker{
-  position:absolute;bottom:90px;left:50%;
-  transform:translateX(-50%);
-  background:var(--card2);
-  border:1px solid rgba(255,107,53,.3);
-  border-radius:16px;padding:10px;
-  display:flex;gap:6px;z-index:40;
-  animation:popIn .25s;
-  box-shadow:0 20px 50px rgba(0,0,0,.6);
-}
-.reaction-picker button{
-  background:transparent;border:none;
-  font-size:26px;cursor:pointer;padding:6px;
-  border-radius:10px;transition:all .2s;
-}
-.reaction-picker button:hover{
-  background:rgba(255,107,53,.2);transform:scale(1.25);
-}
+.participants.open{transform:translateX(0)}
+.room.chat-open .participants{right:360px}
 
-/* Админ */
-.admin{
-  position:absolute;top:70px;right:16px;
-  width:300px;max-height:calc(100vh - 220px);
-  background:rgba(36,23,20,.95);
-  backdrop-filter:blur(16px);
-  border:1px solid rgba(255,107,53,.3);
-  border-radius:16px;padding:16px;
-  z-index:22;display:none;flex-direction:column;gap:10px;
-  box-shadow:0 20px 50px rgba(0,0,0,.5);
-  animation:popIn .3s;
-}
-.admin.show{display:flex}
-.admin h3{
-  font-size:14px;font-weight:700;
-  color:var(--orange-light);
+.participants-head{
+  padding:16px;
   display:flex;justify-content:space-between;align-items:center;
+  border-bottom:1px solid rgba(255,107,53,.15);
 }
-.admin-list{
-  overflow-y:auto;max-height:240px;
+.participants-close{
+  background:transparent;border:none;color:var(--muted);
+  cursor:pointer;font-size:16px;padding:6px 10px;
+  border-radius:8px;transition:all .2s;
+}
+.participants-close:hover{background:rgba(255,107,53,.15);color:var(--orange)}
+
+.participants-list{
+  flex:1;overflow-y:auto;padding:12px;
   display:flex;flex-direction:column;gap:6px;
 }
-.admin-list::-webkit-scrollbar{width:5px}
-.admin-list::-webkit-scrollbar-thumb{background:rgba(255,107,53,.3);border-radius:3px}
+.participants-list::-webkit-scrollbar{width:6px}
+.participants-list::-webkit-scrollbar-thumb{background:rgba(255,107,53,.3);border-radius:3px}
 
-.admin-row{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:8px 10px;background:rgba(0,0,0,.25);
-  border-radius:9px;font-size:13px;gap:6px;
+.participant{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:12px;
+  transition:background .2s;
+  cursor:pointer;
+  position:relative;
 }
-.admin-row span{
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;
-}
-.admin-row .mini-btn{
-  background:rgba(255,107,53,.15);border:none;
-  color:var(--orange-light);
-  width:28px;height:28px;border-radius:7px;
-  cursor:pointer;font-size:14px;
+.participant:hover{background:rgba(255,107,53,.1)}
+.participant.self{background:rgba(255,107,53,.08)}
+
+.p-avatar{
+  width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,var(--orange),var(--orange-light));
   display:grid;place-items:center;
-  transition:all .2s;flex-shrink:0;
+  font-weight:700;font-size:13px;color:#fff;
+  flex-shrink:0;position:relative;
 }
-.admin-row .mini-btn:hover{background:var(--orange);color:#fff}
+.p-avatar.admin{
+  background:linear-gradient(135deg,#F5A623,#E05520);
+  box-shadow:0 4px 14px rgba(245,166,35,.5);
+}
+.p-avatar .crown{
+  position:absolute;top:-4px;right:-4px;
+  font-size:12px;
+}
 
-.admin-toggle{
+.p-info{flex:1;min-width:0}
+.p-name{
+  font-weight:600;font-size:14px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  display:flex;align-items:center;gap:6px;
+}
+.p-name .self-label{
+  font-size:10px;color:var(--orange-light);font-weight:700;
   background:rgba(255,107,53,.15);
-  border:1px solid rgba(255,107,53,.3);
-  color:var(--orange-light);
-  padding:8px 12px;border-radius:9px;
-  font-size:12px;cursor:pointer;font-weight:600;
-  transition:all .2s;width:100%;
-  font-family:inherit;
+  padding:1px 6px;border-radius:4px;
 }
-.admin-toggle:hover{background:var(--orange);color:#fff}
+.p-status{
+  display:flex;gap:8px;margin-top:3px;
+  font-size:11px;color:var(--muted);
+}
+.p-status span{display:inline-flex;align-items:center;gap:3px}
+.p-status .off{color:var(--red)}
 
+.p-actions{
+  display:flex;gap:4px;
+  opacity:0;transition:opacity .2s;
+}
+.participant:hover .p-actions{opacity:1}
+.p-actions button{
+  background:rgba(255,107,53,.15);border:none;color:var(--orange-light);
+  width:28px;height:28px;border-radius:7px;
+  cursor:pointer;font-size:13px;
+  display:grid;place-items:center;transition:all .2s;
+}
+.p-actions button:hover{background:var(--orange);color:#fff}
+
+.participants-foot{
+  padding:12px;border-top:1px solid rgba(255,107,53,.15);
+  display:flex;gap:6px;
+}
+.foot-btn{
+  flex:1;padding:10px;border-radius:9px;
+  background:rgba(255,107,53,.12);
+  border:1px solid rgba(255,107,53,.25);
+  color:var(--text);cursor:pointer;font-size:12px;
+  font-weight:600;font-family:inherit;transition:all .2s;
+}
+.foot-btn:hover{background:var(--orange);color:#fff}
+
+#participantsBtn .badge{
+  position:absolute;top:-4px;right:-4px;
+  background:var(--orange);color:#fff;
+  font-size:10px;font-weight:700;
+  min-width:18px;height:18px;padding:0 5px;
+  border-radius:9px;display:flex;
+  align-items:center;justify-content:center;
+}
+
+/* ============ МОДАЛКИ ============ */
+.modal{
+  position:fixed;inset:0;
+  background:rgba(10,5,3,.85);
+  backdrop-filter:blur(8px);
+  display:none;align-items:center;justify-content:center;
+  z-index:1000;padding:20px;
+}
+.modal.show{display:flex;animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes popIn{
+  from{opacity:0;transform:scale(.9) translateY(20px)}
+  to{opacity:1;transform:scale(1) translateY(0)}
+}
+
+.modal-card{
+  background:var(--card);
+  border:1px solid rgba(255,107,53,.25);
+  border-radius:20px;padding:28px;
+  width:100%;max-width:520px;
+  max-height:85vh;overflow-y:auto;
+  animation:popIn .35s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 30px 80px rgba(0,0,0,.7);
+}
+.modal-card h2{font-size:20px;font-weight:800;margin-bottom:6px}
+
+.modal-actions{
+  display:flex;gap:10px;margin-top:22px;
+}
+.modal-actions button{
+  flex:1;padding:13px;border-radius:11px;
+  font-weight:700;cursor:pointer;
+  font-family:inherit;border:none;
+  font-size:14px;transition:all .2s;
+}
+
+.btn{
+  padding:13px 22px;border-radius:11px;
+  font-weight:700;cursor:pointer;
+  font-family:inherit;border:none;
+  font-size:14px;transition:all .2s;
+  display:inline-flex;align-items:center;gap:8px;
+  justify-content:center;
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--orange),var(--orange-dark));
+  color:#fff;box-shadow:0 8px 22px var(--glow);
+}
+.btn-primary:hover{transform:translateY(-2px)}
+.btn-ghost{
+  background:rgba(255,255,255,.05);
+  color:var(--text);
+  border:1px solid rgba(255,107,53,.25);
+}
+.btn-ghost:hover{background:rgba(255,107,53,.15)}
+
+/* ============ АДАПТИВ ============ */
 @media (max-width:768px){
   .room.chat-open{padding-right:0}
   .chat{width:100%}
+  .participants{width:100%}
+  .room.chat-open .participants{right:0}
   .room.chat-open .controls{transform:translateX(-50%)}
-  .video-grid{inset:60px 8px 120px 8px;grid-template-columns:1fr}
+  .controls{gap:4px;padding:8px}
+  .ctrl{width:42px;height:42px;font-size:17px}
+  .video-grid{
+    inset:60px 8px 120px 8px;
+    grid-template-columns:1fr;
+  }
   .admin{width:calc(100% - 32px);right:16px}
 }
 </style>
@@ -532,7 +725,11 @@ input[type=checkbox].hidden-cb:checked + .switch::after{transform:translateX(16p
 <body>
 
 <div class="room" id="room">
+
+  <!-- ============ STAGE ============ -->
   <div class="stage">
+
+    <!-- Topbar -->
     <div class="topbar">
       <div class="room-info">
         <span>Комната</span>
@@ -550,8 +747,10 @@ input[type=checkbox].hidden-cb:checked + .switch::after{transform:translateX(16p
       </div>
     </div>
 
+    <!-- Видео-сетка -->
     <div class="video-grid" id="videoGrid"></div>
 
+    <!-- Доска -->
     <div class="board" id="boardPanel">
       <canvas id="boardCanvas"></canvas>
       <div class="board-toolbar">
@@ -579,25 +778,31 @@ input[type=checkbox].hidden-cb:checked + .switch::after{transform:translateX(16p
       </div>
     </div>
 
+    <!-- Реакции -->
     <div class="reactions-layer" id="reactionsLayer"></div>
 
+    <!-- Админ -->
     <div class="admin" id="adminPanel">
       <h3>
         🛡️ Админ-панель
-        <button class="mini-btn" id="closeAdmin" style="width:24px;height:24px">✕</button>
+        <button class="mini-btn" id="closeAdmin" style="width:24px;height:24px;background:rgba(255,107,53,.15);border:none;color:var(--orange-light);border-radius:7px;cursor:pointer">✕</button>
       </h3>
       <div style="font-size:11px;color:var(--muted)">Семён Иванов (bdfka)</div>
       <div class="admin-list" id="adminList"></div>
       <button class="admin-toggle" id="lowerAllHands">Опустить все руки</button>
       <button class="admin-toggle" id="muteAll">Выключить всем микрофоны</button>
       <button class="admin-toggle" id="toggleBoardAdmin">Вкл/выкл доску всем</button>
-      <a class="admin-toggle" href="admin.html" style="text-align:center;text-decoration:none;display:block;margin-top:6px">
-        🎫 Выдача подписок →
-      </a>
+      <a class="admin-toggle link" href="admin.html">🎫 Выдача подписок →</a>
     </div>
+
+    <!-- Кнопка участников -->
+    <button class="ctrl" id="participantsBtn" title="Участники" style="position:absolute;bottom:20px;right:20px;z-index:31">
+      👥<span class="badge" id="participantsBadge">0</span>
+    </button>
   </div>
 
-  <div class="controls">
+  <!-- ============ CONTROLS ============ -->
+  <div class="controls" id="controls">
     <button class="ctrl active" id="micBtn" title="Микрофон">🎤</button>
     <button class="ctrl active" id="camBtn" title="Камера">📹</button>
     <button class="ctrl" id="screenBtn" title="Демонстрация экрана">🖥️</button>
@@ -611,6 +816,7 @@ input[type=checkbox].hidden-cb:checked + .switch::after{transform:translateX(16p
     <button class="ctrl danger" id="leaveBtn" title="Выйти">📞</button>
   </div>
 
+  <!-- ============ ЧАТ ============ -->
   <aside class="chat" id="chat">
     <header class="chat-head">
       <div class="chat-tabs">
@@ -650,12 +856,34 @@ input[type=checkbox].hidden-cb:checked + .switch::after{transform:translateX(16p
       <input type="file" id="photoInput" accept="image/*" hidden />
     </div>
   </aside>
+
+  <!-- ============ УЧАСТНИКИ ============ -->
+  <aside class="participants" id="participantsPanel">
+    <header class="participants-head">
+      <div>
+        <h3 style="font-size:14px;font-weight:800;margin:0">Участники</h3>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">
+          <span id="participantsCount">0</span> в комнате
+        </div>
+      </div>
+      <button class="participants-close" id="closeParticipants">✕</button>
+    </header>
+
+    <div class="participants-list" id="participantsList"></div>
+
+    <footer class="participants-foot">
+      <button class="foot-btn" id="inviteBtn">🔗 Пригласить</button>
+      <button class="foot-btn" id="copyIdBtn">📋 ID комнаты</button>
+    </footer>
+  </aside>
 </div>
 
-<!-- Модалка настроек -->
+<!-- ============ МОДАЛКА НАСТРОЕК ============ -->
 <div class="modal" id="settingsModal">
-  <div class="modal-card" style="max-width:520px">
+  <div class="modal-card">
     <h2>Настройки устройств</h2>
+    <p style="color:var(--muted);font-size:13px;margin-bottom:14px">Проверка микрофона и камеры</p>
+
     <label style="display:block;font-size:13px;color:var(--muted);margin:14px 0 6px">Микрофон</label>
     <select id="micSelect" style="width:100%;padding:11px;border-radius:10px;border:1px solid rgba(255,107,53,.25);background:var(--bg2);color:var(--text);font-family:inherit"></select>
     <button class="admin-toggle" id="testMic" style="margin-top:8px">Проверить уровень</button>
@@ -674,16 +902,16 @@ input[type=checkbox].hidden-cb:checked + .switch::after{transform:translateX(16p
   </div>
 </div>
 
-<!-- Модалка опроса -->
+<!-- ============ МОДАЛКА ОПРОСА ============ -->
 <div class="modal" id="pollModal">
   <div class="modal-card">
     <h2>📊 Новый опрос</h2>
     <label style="display:block;font-size:13px;color:var(--muted);margin:14px 0 6px">Вопрос</label>
-    <input type="text" id="pollQuestion" placeholder="Ваш вопрос..." maxlength="200" />
+    <input type="text" id="pollQuestion" placeholder="Ваш вопрос..." maxlength="200" style="width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,107,53,.25);background:var(--bg2);color:var(--text);font-family:inherit;outline:none" />
     <label style="display:block;font-size:13px;color:var(--muted);margin:14px 0 6px">Варианты</label>
     <div id="pollOptions">
-      <input type="text" class="poll-opt-input" placeholder="Вариант 1" maxlength="100" style="margin-bottom:6px" />
-      <input type="text" class="poll-opt-input" placeholder="Вариант 2" maxlength="100" />
+      <input type="text" class="poll-opt-input" placeholder="Вариант 1" maxlength="100" style="width:100%;padding:11px;border-radius:10px;border:1px solid rgba(255,107,53,.25);background:var(--bg2);color:var(--text);font-family:inherit;margin-bottom:6px;outline:none" />
+      <input type="text" class="poll-opt-input" placeholder="Вариант 2" maxlength="100" style="width:100%;padding:11px;border-radius:10px;border:1px solid rgba(255,107,53,.25);background:var(--bg2);color:var(--text);font-family:inherit;outline:none" />
     </div>
     <button class="admin-toggle" id="addPollOpt" style="margin-top:6px">+ Добавить вариант</button>
     <div class="modal-actions">
@@ -693,7 +921,7 @@ input[type=checkbox].hidden-cb:checked + .switch::after{transform:translateX(16p
   </div>
 </div>
 
-<!-- Просмотр фото -->
+<!-- ============ ПРОСМОТР ФОТО ============ -->
 <div class="modal" id="imageViewer" style="background:rgba(0,0,0,.95)">
   <img id="imageViewerImg" style="max-width:90vw;max-height:90vh;border-radius:12px" src="" />
 </div>
@@ -703,7 +931,7 @@ input[type=checkbox].hidden-cb:checked + .switch::after{transform:translateX(16p
 <script src="/socket.io/socket.io.js"></script>
 <script>
 /* ============================================================
-   SinkConferentions — Комната
+   SinkConferentions — Комната v2
    ============================================================ */
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => document.querySelectorAll(s);
@@ -712,7 +940,8 @@ const params = new URLSearchParams(location.search);
 const roomId = (params.get('room') || 'demo').toUpperCase();
 const session = (() => { try { return JSON.parse(localStorage.getItem('sink_session')); } catch { return null; } })();
 let userName = session?.name || localStorage.getItem('displayName') || 'Гость';
-let isAdmin = session?.login === 'bdfka' || session?.isAdmin === true || userName === 'bdfka' || userName === 'Семён Иванов';
+let isAdmin = session?.login === 'bdfka' || session?.isAdmin === true
+              || userName === 'bdfka' || userName === 'Семён Иванов';
 
 const state = {
   socket: null,
@@ -724,11 +953,14 @@ const state = {
   chatOpen: false, chatTab: 'general', dmUser: null, unread: 0
 };
 
-// ============ INIT ============
+// ============================================================
+// INIT
+// ============================================================
 document.addEventListener('DOMContentLoaded', async () => {
   $('#roomIdLabel').textContent = roomId;
   if (isAdmin) $('#adminPanel').classList.add('show');
 
+  // Медиа
   try {
     state.localStream = await navigator.mediaDevices.getUserMedia({
       video: { width: { ideal: 1280 }, height: { ideal: 720 } },
@@ -738,36 +970,73 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.warn('Медиа недоступны:', e);
   }
 
-  // Подключение Socket.IO
+  renderSelfTile();
+
+  // Socket.IO
   if (window.io) {
     state.socket = io();
-    state.socket.emit('join-room', { roomId, userName }, (res) => {
-      if (res?.error) { toast(res.error, 'error'); return; }
-      isAdmin = res.isAdmin || isAdmin;
+
+    state.socket.on('connect', () => {
+      console.log('[socket] connected:', state.socket.id);
+      state.socket.emit('join-room', { roomId, userName }, (res) => {
+        console.log('[join-room] response:', res);
+        if (res?.error) { toast(res.error, 'error'); return; }
+        isAdmin = res.isAdmin || isAdmin;
+        if (res.participants) {
+          state.participants = res.participants;
+          renderParticipants(res.participants);
+        }
+      });
     });
+
+    state.socket.on('connect_error', (err) => {
+      console.error('[socket] connect error:', err);
+      toast('Ошибка подключения к серверу', 'error');
+    });
+
     bindSocketEvents();
   }
 
-  renderSelfTile();
   bindControls();
   bindChat();
   bindBoard();
   bindSettings();
   bindAdmin();
   bindModals();
+  initParticipants();
+
+  // Загрузить историю общего чата
+  if (state.socket) {
+    state.socket.emit('load-chat-history', { roomId }, ({ messages }) => {
+      (messages || []).forEach(m => renderMsg($('#msgsGeneral'), {
+        senderName: m.sender_name,
+        senderId: m.sender_id,
+        type: m.type,
+        content: m.content,
+        createdAt: m.created_at
+      }, false));
+    });
+  }
+
   updateParticipantCount();
 });
 
-// ============ ВИДЕО ============
+// ============================================================
+// ВИДЕО
+// ============================================================
 function renderSelfTile() {
   const grid = $('#videoGrid');
+  const id = state.socket?.id || 'self';
   const tile = document.createElement('div');
   tile.className = 'video-tile';
-  tile.id = 'tile-self';
+  tile.id = `tile-${id}`;
   tile.innerHTML = `
     <video autoplay muted playsinline></video>
     <div class="avatar">${userName[0].toUpperCase()}</div>
-    <span class="name-tag"><span class="name">${userName} (Вы)</span><span class="mic-off" style="display:none">🔇</span></span>
+    <span class="name-tag">
+      <span class="name">${escapeHtml(userName)} (Вы)</span>
+      <span class="mic-off" style="display:none">🔇</span>
+    </span>
     <span class="hand-badge hidden">✋</span>
   `;
   const v = tile.querySelector('video');
@@ -780,31 +1049,181 @@ function updateParticipantCount() {
   $('#participantCount').textContent = `· ${document.querySelectorAll('.video-tile').length} уч.`;
 }
 
-// ============ КОНТРОЛЫ ============
+// ============================================================
+// SOCKET EVENTS
+// ============================================================
+function bindSocketEvents() {
+  state.socket.on('room-update', (data) => {
+    console.log('[room-update]', data.participants.length, 'participants');
+    state.participants = data.participants;
+    renderParticipants(data.participants);
+    updateParticipantCount();
+  });
+
+  state.socket.on('hand-update', ({ socketId, raised }) => {
+    const t = document.getElementById('tile-' + socketId);
+    if (t) t.querySelector('.hand-badge')?.classList.toggle('hidden', !raised);
+    const p = state.participants.find(x => x.id === socketId);
+    if (p) { p.handRaised = raised; renderParticipants(); }
+  });
+
+  state.socket.on('media-update', ({ socketId, type, enabled }) => {
+    const t = document.getElementById('tile-' + socketId);
+    if (!t) return;
+    if (type === 'video') t.classList.toggle('cam-off', !enabled);
+    if (type === 'audio') {
+      const m = t.querySelector('.mic-off');
+      if (m) m.style.display = enabled ? 'none' : 'inline';
+    }
+    const p = state.participants.find(x => x.id === socketId);
+    if (p) {
+      p.mediaState = p.mediaState || {};
+      p.mediaState[type] = enabled;
+      renderParticipants();
+    }
+  });
+
+  state.socket.on('board-visibility', (enabled) => {
+    $('#boardPanel').classList.toggle('show', enabled);
+  });
+
+  state.socket.on('whiteboard-draw', (data) => { /* hook */ });
+  state.socket.on('whiteboard-clear', () => { board.strokes = []; redraw(); });
+
+  state.socket.on('chat-message', (msg) => {
+    const isOwn = msg.senderId === state.socket.id;
+    const isCurrentView = state.chatTab === 'general' && !msg.recipientId
+      || state.chatTab === 'dm' && state.dmUser === msg.senderId;
+
+    if (msg.recipientId) {
+      if (msg.senderId === state.socket.id || msg.recipientId === state.socket.id) {
+        if (state.dmUser === msg.senderId || isOwn) {
+          if (!chatStore.dm[msg.senderId]) chatStore.dm[msg.senderId] = [];
+          chatStore.dm[msg.senderId].push(msg);
+          renderMsg($('#msgsDm'), msg, true);
+        }
+      }
+    } else {
+      chatStore.general.push(msg);
+      renderMsg($('#msgsGeneral'), msg, true);
+    }
+
+    if (!isCurrentView && !state.chatOpen) {
+      state.unread++;
+      updateBadge();
+    }
+  });
+
+  state.socket.on('force-media-toggle', ({ type, enabled }) => {
+    if (type === 'audio') toggleMic(enabled);
+    if (type === 'video') toggleCam(enabled);
+  });
+
+  state.socket.on('typing', ({ senderId, senderName, isTyping }) => {
+    const show = state.chatTab === 'general' || (state.chatTab === 'dm' && state.dmUser === senderId);
+    if (show) {
+      $('#typing').classList.toggle('hidden', !isTyping);
+      $('#typingName').textContent = isTyping ? senderName + ' печатает...' : '';
+    }
+  });
+
+  // WebRTC
+  state.socket.on('offer', async ({ fromId, offer }) => {
+    const pc = createPeerConnection(fromId, false);
+    await pc.setRemoteDescription(new RTCSessionDescription(offer));
+    const answer = await pc.createAnswer();
+    await pc.setLocalDescription(answer);
+    state.socket.emit('answer', { targetId: fromId, answer });
+  });
+
+  state.socket.on('answer', async ({ fromId, answer }) => {
+    const pc = state.peers.get(fromId);
+    if (pc) await pc.setRemoteDescription(new RTCSessionDescription(answer));
+  });
+
+  state.socket.on('ice-candidate', async ({ fromId, candidate }) => {
+    const pc = state.peers.get(fromId);
+    if (pc) try { await pc.addIceCandidate(new RTCIceCandidate(candidate)); } catch (e) {}
+  });
+}
+
+// ============================================================
+// WEBRTC
+// ============================================================
+function createPeerConnection(peerId, isInitiator) {
+  if (state.peers.has(peerId)) return state.peers.get(peerId);
+
+  const pc = new RTCPeerConnection({
+    iceServers: [
+      { urls: 'stun:stun.l.google.com:19302' },
+      { urls: 'stun:stun1.l.google.com:19302' }
+    ]
+  });
+
+  state.peers.set(peerId, pc);
+
+  if (state.localStream) {
+    state.localStream.getTracks().forEach(track => pc.addTrack(track, state.localStream));
+  }
+
+  pc.onicecandidate = (e) => {
+    if (e.candidate) state.socket.emit('ice-candidate', { targetId: peerId, candidate: e.candidate });
+  };
+
+  pc.ontrack = (e) => {
+    addRemoteVideo(peerId, e.streams[0]);
+  };
+
+  pc.onnegotiationneeded = async () => {
+    if (!isInitiator) return;
+    try {
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+      state.socket.emit('offer', { targetId: peerId, offer });
+    } catch (e) { console.warn(e); }
+  };
+
+  return pc;
+}
+
+function addRemoteVideo(peerId, stream) {
+  const grid = $('#videoGrid');
+  let tile = document.getElementById('tile-' + peerId);
+  if (!tile) {
+    tile = document.createElement('div');
+    tile.className = 'video-tile';
+    tile.id = 'tile-' + peerId;
+    const p = state.participants.find(x => x.id === peerId);
+    const name = p?.name || 'Участник';
+    tile.innerHTML = `
+      <video autoplay playsinline></video>
+      <div class="avatar">${name[0].toUpperCase()}</div>
+      <span class="name-tag">
+        <span class="name">${escapeHtml(name)}</span>
+        <span class="mic-off" style="display:none">🔇</span>
+      </span>
+      <span class="hand-badge hidden">✋</span>
+    `;
+    grid.appendChild(tile);
+    updateParticipantCount();
+  }
+  tile.querySelector('video').srcObject = stream;
+}
+
+// ============================================================
+// КОНТРОЛЫ
+// ============================================================
 function bindControls() {
-  $('#micBtn').onclick = () => {
-    state.micOn = !state.micOn;
-    state.localStream?.getAudioTracks().forEach(t => t.enabled = state.micOn);
-    $('#micBtn').classList.toggle('active', state.micOn);
-    $('#micBtn').classList.toggle('off', !state.micOn);
-    $('#tile-self').querySelector('.mic-off').style.display = state.micOn ? 'none' : 'inline';
-  };
-
-  $('#camBtn').onclick = () => {
-    state.camOn = !state.camOn;
-    state.localStream?.getVideoTracks().forEach(t => t.enabled = state.camOn);
-    $('#camBtn').classList.toggle('active', state.camOn);
-    $('#camBtn').classList.toggle('off', !state.camOn);
-    $('#tile-self').classList.toggle('cam-off', !state.camOn);
-  };
-
+  $('#micBtn').onclick = () => toggleMic();
+  $('#camBtn').onclick = () => toggleCam();
   $('#screenBtn').onclick = toggleScreen;
   $('#boardBtn').onclick = toggleBoard;
 
   $('#handBtn').onclick = () => {
     state.handRaised = !state.handRaised;
     $('#handBtn').classList.toggle('active', state.handRaised);
-    $('#tile-self').querySelector('.hand-badge').classList.toggle('hidden', !state.handRaised);
+    const selfTile = document.getElementById('tile-' + state.socket?.id);
+    if (selfTile) selfTile.querySelector('.hand-badge')?.classList.toggle('hidden', !state.handRaised);
     state.socket?.emit('raise-hand', { roomId, raised: state.handRaised });
   };
 
@@ -823,9 +1242,32 @@ function bindControls() {
   };
 
   $('#copyInvite').onclick = () => {
-    const link = `${location.origin}${location.pathname}?room=${roomId}`;
+    const link = `${location.origin}/room.html?room=${roomId}`;
     navigator.clipboard.writeText(link).then(() => toast('Ссылка скопирована'));
   };
+}
+
+function toggleMic(force) {
+  state.micOn = force !== undefined ? force : !state.micOn;
+  state.localStream?.getAudioTracks().forEach(t => t.enabled = state.micOn);
+  $('#micBtn').classList.toggle('active', state.micOn);
+  $('#micBtn').classList.toggle('off', !state.micOn);
+  const selfTile = document.getElementById('tile-' + state.socket?.id);
+  if (selfTile) {
+    const m = selfTile.querySelector('.mic-off');
+    if (m) m.style.display = state.micOn ? 'none' : 'inline';
+  }
+  state.socket?.emit('toggle-media', { roomId, type: 'audio', enabled: state.micOn });
+}
+
+function toggleCam(force) {
+  state.camOn = force !== undefined ? force : !state.camOn;
+  state.localStream?.getVideoTracks().forEach(t => t.enabled = state.camOn);
+  $('#camBtn').classList.toggle('active', state.camOn);
+  $('#camBtn').classList.toggle('off', !state.camOn);
+  const selfTile = document.getElementById('tile-' + state.socket?.id);
+  if (selfTile) selfTile.classList.toggle('cam-off', !state.camOn);
+  state.socket?.emit('toggle-media', { roomId, type: 'video', enabled: state.camOn });
 }
 
 async function toggleScreen() {
@@ -834,41 +1276,79 @@ async function toggleScreen() {
     state.screenStream.getTracks().forEach(t => t.stop());
     state.screenStream = null;
     btn.classList.remove('active');
+    const selfTile = document.getElementById('tile-' + state.socket?.id);
+    if (selfTile && state.localStream) selfTile.querySelector('video').srcObject = state.localStream;
     return;
   }
   try {
     state.screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: false });
-    const v = $('#tile-self video');
-    if (v) v.srcObject = state.screenStream;
+    const screenTrack = state.screenStream.getVideoTracks()[0];
+
+    state.peers.forEach(pc => {
+      const sender = pc.getSenders().find(s => s.track?.kind === 'video');
+      if (sender) sender.replaceTrack(screenTrack);
+    });
+
+    const selfTile = document.getElementById('tile-' + state.socket?.id);
+    if (selfTile) {
+      selfTile.querySelector('video').srcObject = state.screenStream;
+      selfTile.classList.remove('cam-off');
+    }
+
     btn.classList.add('active');
-    state.screenStream.getVideoTracks()[0].onended = () => toggleScreen();
+    state.socket?.emit('toggle-media', { roomId, type: 'screen', enabled: true });
+
+    screenTrack.onended = () => toggleScreen();
   } catch (e) { /* отменено */ }
 }
 
-// ============ SOCKET ============
-function bindSocketEvents() {
-  if (!state.socket) return;
-  state.socket.on('room-update', (data) => {
-    state.participants = data.participants;
+// ============================================================
+// РЕАКЦИИ
+// ============================================================
+function showReactionPicker() {
+  document.querySelector('.reaction-picker')?.remove();
+  const p = document.createElement('div');
+  p.className = 'reaction-picker';
+  ['👍','❤️','😂','🎉','🔥','👏','😮','🙏'].forEach(e => {
+    const b = document.createElement('button');
+    b.textContent = e;
+    b.onclick = () => { spawnEmoji(e); p.remove(); };
+    p.appendChild(b);
   });
-  state.socket.on('hand-update', ({ socketId, raised }) => {
-    const t = document.getElementById('tile-' + socketId);
-    if (t) t.querySelector('.hand-badge').classList.toggle('hidden', !raised);
-  });
-  state.socket.on('board-visibility', (enabled) => {
-    $('#boardPanel').classList.toggle('show', enabled);
-  });
+  document.body.appendChild(p);
+  setTimeout(() => {
+    const close = (ev) => {
+      if (!p.contains(ev.target)) {
+        p.remove();
+        document.removeEventListener('click', close);
+      }
+    };
+    document.addEventListener('click', close);
+  }, 50);
 }
 
-// ============ ДОСКА ============
+function spawnEmoji(emoji) {
+  const el = document.createElement('div');
+  el.className = 'floating-emoji';
+  el.textContent = emoji;
+  el.style.left = (10 + Math.random() * 80) + '%';
+  $('#reactionsLayer').appendChild(el);
+  setTimeout(() => el.remove(), 3200);
+}
+
+// ============================================================
+// ДОСКА
+// ============================================================
 const board = {
   canvas: null, ctx: null, drawing: false,
   tool: 'pencil', color: '#FF6B35', width: 4,
-  scale: 1, offset: { x: 0, y: 0 }, last: null, strokes: [], current: null
+  scale: 1, offset: { x: 0, y: 0 }, last: null,
+  strokes: [], current: null
 };
 
 function bindBoard() {
   board.canvas = $('#boardCanvas');
+  if (!board.canvas) return;
   board.ctx = board.canvas.getContext('2d');
   resizeBoard();
   window.addEventListener('resize', resizeBoard);
@@ -886,8 +1366,16 @@ function bindBoard() {
   $('#strokeWidth').oninput = (e) => board.width = +e.target.value;
   $('#zoomIn').onclick = () => setZoom(board.scale * 1.2);
   $('#zoomOut').onclick = () => setZoom(board.scale / 1.2);
-  $('#resetView').onclick = () => { board.scale = 1; board.offset = { x: 0, y: 0 }; $('#zoomLevel').textContent = '100%'; redraw(); };
-  $('#clearBoard').onclick = () => { board.strokes = []; redraw(); state.socket?.emit('whiteboard-clear', { roomId }); };
+  $('#resetView').onclick = () => {
+    board.scale = 1; board.offset = { x: 0, y: 0 };
+    $('#zoomLevel').textContent = '100%';
+    redraw();
+  };
+  $('#clearBoard').onclick = () => {
+    board.strokes = [];
+    redraw();
+    state.socket?.emit('whiteboard-clear', { roomId });
+  };
   $('#boardVisibleToggle').onchange = (e) => {
     state.socket?.emit('toggle-board-visibility', { roomId, enabled: e.target.checked });
   };
@@ -948,6 +1436,7 @@ function endDraw() {
 }
 function redraw() {
   const ctx = board.ctx, c = board.canvas;
+  if (!ctx) return;
   ctx.save();
   ctx.setTransform(1,0,0,1,0,0);
   ctx.clearRect(0,0,c.width,c.height);
@@ -972,37 +1461,14 @@ function toggleBoard() {
   if (panel.classList.contains('show')) setTimeout(resizeBoard, 50);
 }
 
-// ============ РЕАКЦИИ ============
-function showReactionPicker() {
-  document.querySelector('.reaction-picker')?.remove();
-  const p = document.createElement('div');
-  p.className = 'reaction-picker';
-  ['👍','❤️','😂','🎉','🔥','👏','😮','🙏'].forEach(e => {
-    const b = document.createElement('button');
-    b.textContent = e;
-    b.onclick = () => { spawnEmoji(e); p.remove(); };
-    p.appendChild(b);
-  });
-  document.body.appendChild(p);
-  setTimeout(() => {
-    const close = (ev) => { if (!p.contains(ev.target)) { p.remove(); document.removeEventListener('click', close); } };
-    document.addEventListener('click', close);
-  }, 50);
-}
-function spawnEmoji(emoji) {
-  const el = document.createElement('div');
-  el.className = 'floating-emoji';
-  el.textContent = emoji;
-  el.style.left = (10 + Math.random() * 80) + '%';
-  $('#reactionsLayer').appendChild(el);
-  setTimeout(() => el.remove(), 3200);
-}
-
-// ============ ЧАТ ============
+// ============================================================
+// ЧАТ
+// ============================================================
 const chatStore = { general: [], dm: {} };
 
 function bindChat() {
   $('#chatClose').onclick = () => toggleChat(false);
+
   $$('.chat-tab').forEach(tab => {
     tab.onclick = () => {
       $$('.chat-tab').forEach(t => t.classList.remove('active'));
@@ -1013,11 +1479,13 @@ function bindChat() {
       if (state.chatTab === 'dm') renderDmList();
     };
   });
+
   $('#dmBack').onclick = () => {
     state.dmUser = null;
     $('#dmList').style.display = '';
     $('#dmConv').classList.remove('active');
   };
+
   $('#sendBtn').onclick = sendMessage;
   $('#chatInput').addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
@@ -1025,6 +1493,19 @@ function bindChat() {
   $('#chatInput').addEventListener('input', (e) => {
     e.target.style.height = 'auto';
     e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px';
+    state.socket?.emit('typing', {
+      roomId,
+      recipientId: state.chatTab === 'dm' ? state.dmUser : null,
+      isTyping: true
+    });
+    clearTimeout(window._typeTimer);
+    window._typeTimer = setTimeout(() => {
+      state.socket?.emit('typing', {
+        roomId,
+        recipientId: state.chatTab === 'dm' ? state.dmUser : null,
+        isTyping: false
+      });
+    }, 1200);
   });
 
   $('#attachBtn').onclick = (e) => {
@@ -1061,10 +1542,13 @@ function toggleChat(force) {
   $('#room').classList.toggle('chat-open', state.chatOpen);
   if (state.chatOpen) { state.unread = 0; updateBadge(); }
 }
+
 function updateBadge() {
   const b = $('#chatBadge');
-  if (state.unread > 0) { b.textContent = state.unread > 9 ? '9+' : state.unread; b.classList.add('show'); }
-  else b.classList.remove('show');
+  if (state.unread > 0) {
+    b.textContent = state.unread > 9 ? '9+' : state.unread;
+    b.classList.add('show');
+  } else b.classList.remove('show');
 }
 
 function sendMessage() {
@@ -1073,20 +1557,22 @@ function sendMessage() {
   if (!text) return;
   const msg = {
     id: 'm_' + Date.now(),
-    senderName: userName, senderId: 'self',
-    type: 'text', content: { text },
+    senderId: state.socket?.id || 'self',
+    senderName: userName,
+    type: 'text',
+    content: { text },
     recipientId: state.chatTab === 'dm' ? state.dmUser : null,
     createdAt: new Date().toISOString()
   };
-  if (state.chatTab === 'dm' && state.dmUser) {
-    if (!chatStore.dm[state.dmUser]) chatStore.dm[state.dmUser] = [];
-    chatStore.dm[state.dmUser].push(msg);
+  if (msg.recipientId) {
+    if (!chatStore.dm[msg.recipientId]) chatStore.dm[msg.recipientId] = [];
+    chatStore.dm[msg.recipientId].push(msg);
     renderMsg($('#msgsDm'), msg, true);
   } else {
     chatStore.general.push(msg);
     renderMsg($('#msgsGeneral'), msg, true);
   }
-  if (state.socket) state.socket.emit('chat-message', { roomId, message: msg });
+  state.socket?.emit('chat-message', { roomId, message: msg });
   input.value = '';
   input.style.height = 'auto';
 }
@@ -1099,12 +1585,22 @@ function handlePhoto(e) {
   r.onload = (ev) => {
     const msg = {
       id: 'm_' + Date.now(),
-      senderName: userName, senderId: 'self',
-      type: 'image', content: { url: ev.target.result },
+      senderId: state.socket?.id || 'self',
+      senderName: userName,
+      type: 'image',
+      content: { url: ev.target.result },
+      recipientId: state.chatTab === 'dm' ? state.dmUser : null,
       createdAt: new Date().toISOString()
     };
-    chatStore.general.push(msg);
-    renderMsg($('#msgsGeneral'), msg, true);
+    if (msg.recipientId) {
+      if (!chatStore.dm[msg.recipientId]) chatStore.dm[msg.recipientId] = [];
+      chatStore.dm[msg.recipientId].push(msg);
+      renderMsg($('#msgsDm'), msg, true);
+    } else {
+      chatStore.general.push(msg);
+      renderMsg($('#msgsGeneral'), msg, true);
+    }
+    state.socket?.emit('chat-message', { roomId, message: msg });
   };
   r.readAsDataURL(file);
   e.target.value = '';
@@ -1112,8 +1608,8 @@ function handlePhoto(e) {
 
 function renderMsg(container, msg, scroll = false) {
   const el = document.createElement('div');
-  el.className = 'msg' + (msg.senderId === 'self' ? ' own' : '');
-  if (state.chatTab === 'dm') el.classList.add('dm');
+  el.className = 'msg' + (msg.senderId === state.socket?.id || msg.senderId === 'self' ? ' own' : '');
+  if (msg.recipientId || state.chatTab === 'dm') el.classList.add('dm');
   const time = new Date(msg.createdAt || Date.now()).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
   let inner = `<span class="msg-sender">${escapeHtml(msg.senderName)}</span>`;
   if (msg.type === 'text') inner += `<span class="msg-text">${escapeHtml(msg.content.text)}</span>`;
@@ -1144,8 +1640,7 @@ function renderPoll(msg) {
 
 window.votePoll = (pollId, i) => {
   const r = window._polls[pollId];
-  if (!r) return;
-  if (r.votedByMe === i) return;
+  if (!r || r.votedByMe === i) return;
   if (r.votedByMe !== null) r.votes[r.votedByMe] = Math.max(0, (r.votes[r.votedByMe] || 1) - 1);
   else r.total++;
   r.votedByMe = i;
@@ -1164,8 +1659,8 @@ window.votePoll = (pollId, i) => {
 function resetPollForm() {
   $('#pollQuestion').value = '';
   $('#pollOptions').innerHTML = `
-    <input type="text" class="poll-opt-input" placeholder="Вариант 1" maxlength="100" style="margin-bottom:6px" />
-    <input type="text" class="poll-opt-input" placeholder="Вариант 2" maxlength="100" />
+    <input type="text" class="poll-opt-input" placeholder="Вариант 1" maxlength="100" style="width:100%;padding:11px;border-radius:10px;border:1px solid rgba(255,107,53,.25);background:var(--bg2);color:var(--text);font-family:inherit;margin-bottom:6px;outline:none" />
+    <input type="text" class="poll-opt-input" placeholder="Вариант 2" maxlength="100" style="width:100%;padding:11px;border-radius:10px;border:1px solid rgba(255,107,53,.25);background:var(--bg2);color:var(--text);font-family:inherit;outline:none" />
   `;
 }
 function addPollOpt() {
@@ -1176,7 +1671,7 @@ function addPollOpt() {
   i.className = 'poll-opt-input';
   i.placeholder = `Вариант ${o.querySelectorAll('.poll-opt-input').length + 1}`;
   i.maxLength = 100;
-  i.style.marginTop = '6px';
+  i.style.cssText = 'width:100%;padding:11px;border-radius:10px;border:1px solid rgba(255,107,53,.25);background:var(--bg2);color:var(--text);font-family:inherit;margin-top:6px;outline:none';
   o.appendChild(i);
 }
 function createPoll() {
@@ -1186,13 +1681,16 @@ function createPoll() {
   if (opts.length < 2) return toast('Минимум 2', 'error');
   const msg = {
     id: 'p_' + Date.now(),
-    senderName: userName, senderId: 'self',
-    type: 'poll', content: { question: q, options: opts },
+    senderId: state.socket?.id || 'self',
+    senderName: userName,
+    type: 'poll',
+    content: { question: q, options: opts },
+    recipientId: state.chatTab === 'dm' ? state.dmUser : null,
     createdAt: new Date().toISOString()
   };
   chatStore.general.push(msg);
   renderMsg($('#msgsGeneral'), msg, true);
-  if (state.socket) state.socket.emit('chat-message', { roomId, message: msg });
+  state.socket?.emit('chat-message', { roomId, message: msg });
   $('#pollModal').classList.remove('show');
   resetPollForm();
 }
@@ -1214,13 +1712,7 @@ function renderDmList() {
     </div>
   `).join('');
   list.querySelectorAll('.dm-user').forEach(el => {
-    el.onclick = () => {
-      state.dmUser = el.dataset.id;
-      $('#dmList').style.display = 'none';
-      $('#dmConv').classList.add('active');
-      $('#msgsDm').innerHTML = '';
-      (chatStore.dm[state.dmUser] || []).forEach(m => renderMsg($('#msgsDm'), m, false));
-    };
+    el.onclick = () => startDm(el.dataset.id, el.querySelector('.dm-name').textContent);
   });
 }
 
@@ -1229,7 +1721,110 @@ window.viewImage = (url) => {
   $('#imageViewer').classList.add('show');
 };
 
-// ============ НАСТРОЙКИ ============
+// ============================================================
+// УЧАСТНИКИ
+// ============================================================
+function initParticipants() {
+  $('#participantsBtn').onclick = () => {
+    $('#participantsPanel').classList.toggle('open');
+  };
+  $('#closeParticipants').onclick = () => {
+    $('#participantsPanel').classList.remove('open');
+  };
+  $('#inviteBtn').onclick = () => {
+    const link = `${location.origin}/room.html?room=${roomId}`;
+    navigator.clipboard.writeText(link).then(() => toast('Ссылка скопирована'));
+  };
+  $('#copyIdBtn').onclick = () => {
+    navigator.clipboard.writeText(roomId).then(() => toast('ID комнаты: ' + roomId));
+  };
+  renderParticipants();
+}
+
+function renderParticipants(participants) {
+  const list = participants || state.participants || [];
+  $('#participantsCount').textContent = list.length;
+  $('#participantsBadge').textContent = list.length;
+  $('#participantCount').textContent = `· ${list.length} уч.`;
+
+  const container = $('#participantsList');
+  if (!list.length) {
+    container.innerHTML = `
+      <div style="text-align:center;padding:40px 20px;color:var(--muted);font-size:13px">
+        <div style="font-size:36px;opacity:.4;margin-bottom:10px">👤</div>
+        Пока никого. Пригласите ссылкой.
+      </div>
+    `;
+    return;
+  }
+
+  const sorted = [...list].sort((a, b) => {
+    if (a.isAdmin && !b.isAdmin) return -1;
+    if (!a.isAdmin && b.isAdmin) return 1;
+    return (a.name || '').localeCompare(b.name || '');
+  });
+
+  container.innerHTML = sorted.map(p => {
+    const isSelf = p.id === state.socket?.id;
+    const initial = (p.name || '?')[0].toUpperCase();
+    const micOn = p.mediaState?.audio !== false;
+    const camOn = p.mediaState?.video !== false;
+    const screenOn = p.mediaState?.screen === true;
+
+    return `
+      <div class="participant ${isSelf ? 'self' : ''}" data-id="${p.id}">
+        <div class="p-avatar ${p.isAdmin ? 'admin' : ''}">
+          ${initial}
+          ${p.isAdmin ? '<span class="crown">👑</span>' : ''}
+        </div>
+        <div class="p-info">
+          <div class="p-name">
+            ${escapeHtml(p.name)}
+            ${isSelf ? '<span class="self-label">ВЫ</span>' : ''}
+          </div>
+          <div class="p-status">
+            <span class="${micOn ? '' : 'off'}">${micOn ? '🎤' : '🔇'}</span>
+            <span class="${camOn ? '' : 'off'}">${camOn ? '📹' : '📷'}</span>
+            ${screenOn ? '<span>🖥️</span>' : ''}
+            ${p.handRaised ? '<span>✋</span>' : ''}
+          </div>
+        </div>
+        ${!isSelf ? `
+          <div class="p-actions">
+            <button onclick="event.stopPropagation();startDm('${p.id}','${escapeHtml(p.name)}')" title="Личное сообщение">💬</button>
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }).join('');
+
+  container.querySelectorAll('.participant').forEach(el => {
+    el.onclick = (e) => {
+      if (e.target.closest('.p-actions')) return;
+      const id = el.dataset.id;
+      if (id === state.socket?.id) return;
+      const p = sorted.find(x => x.id === id);
+      if (p) startDm(id, p.name);
+    };
+  });
+}
+
+function startDm(id, name) {
+  state.chatTab = 'dm';
+  state.dmUser = id;
+  toggleChat(true);
+  $$('.chat-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === 'dm'));
+  $('#tabGeneral').classList.remove('active');
+  $('#tabDm').classList.add('active');
+  $('#dmList').style.display = 'none';
+  $('#dmConv').classList.add('active');
+  $('#msgsDm').innerHTML = '';
+  (chatStore.dm[id] || []).forEach(m => renderMsg($('#msgsDm'), m, false));
+}
+
+// ============================================================
+// НАСТРОЙКИ
+// ============================================================
 function bindSettings() {
   $('#closeSettings').onclick = () => {
     $('#settingsModal').classList.remove('show');
@@ -1261,6 +1856,7 @@ function bindSettings() {
     } catch { toast('Нет доступа', 'error'); }
   };
 }
+
 async function refreshDevices() {
   try {
     const ds = await navigator.mediaDevices.enumerateDevices();
@@ -1276,11 +1872,13 @@ async function refreshDevices() {
   } catch {}
 }
 
-// ============ АДМИН ============
+// ============================================================
+// АДМИН
+// ============================================================
 function bindAdmin() {
   $('#closeAdmin').onclick = () => $('#adminPanel').classList.remove('show');
   $('#lowerAllHands').onclick = () => {
-    $$('.hand-badge').forEach(h => h.classList.add('hidden'));
+    document.querySelectorAll('.hand-badge').forEach(h => h.classList.add('hidden'));
     state.socket?.emit('lower-all-hands', { roomId });
     toast('Все руки опущены');
   };
@@ -1293,6 +1891,7 @@ function bindAdmin() {
   };
   renderAdminList();
 }
+
 function renderAdminList() {
   const list = $('#adminList');
   if (!state.participants.length) {
@@ -1302,13 +1901,22 @@ function renderAdminList() {
   list.innerHTML = state.participants.map(p => `
     <div class="admin-row">
       <span>${escapeHtml(p.name)}</span>
-      <button class="mini-btn" title="Mute">🔇</button>
-      <button class="mini-btn" title="Cam">📷</button>
+      <button class="mini-btn" title="Mute" onclick="adminMute('${p.id}')">🔇</button>
+      <button class="mini-btn" title="Cam" onclick="adminCam('${p.id}')">📷</button>
     </div>
   `).join('');
 }
 
-// ============ МОДАЛКИ ============
+window.adminMute = (targetId) => {
+  state.socket?.emit('admin-force-media', { roomId, targetId, type: 'audio', enabled: false });
+};
+window.adminCam = (targetId) => {
+  state.socket?.emit('admin-force-media', { roomId, targetId, type: 'video', enabled: false });
+};
+
+// ============================================================
+// МОДАЛКИ
+// ============================================================
 function bindModals() {
   document.querySelectorAll('.modal').forEach(m => {
     m.addEventListener('click', (e) => {
@@ -1317,12 +1925,15 @@ function bindModals() {
   });
 }
 
-// ============ УТИЛИТЫ ============
+// ============================================================
+// УТИЛИТЫ
+// ============================================================
 function escapeHtml(s) {
   const d = document.createElement('div');
   d.textContent = s || '';
   return d.innerHTML;
 }
+
 function toast(msg, type = 'info') {
   const t = $('#toast');
   t.textContent = msg;
