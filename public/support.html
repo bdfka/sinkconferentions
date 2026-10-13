@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Техподдержка — SinkConferentions</title>
+<link rel="stylesheet" href="styles.css" />
+<style>
+.container{
+  max-width:1200px;margin:0 auto;padding:40px 24px;
+  display:grid;grid-template-columns:340px 1fr;gap:24px;
+}
+.sidebar{display:flex;flex-direction:column;gap:20px}
+.card{
+  background:var(--card);border:1px solid rgba(255,107,53,.18);
+  border-radius:18px;padding:22px;
+}
+.card h3{
+  font-size:14px;font-weight:700;color:var(--orange-light);
+  text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;
+}
+.new-ticket-btn{
+  width:100%;padding:14px;
+  background:linear-gradient(135deg,var(--orange),var(--orange-dark));
+  color:#fff;border:none;border-radius:12px;
+  font-size:15px;font-weight:700;cursor:pointer;
+  box-shadow:0 10px 28px var(--glow);
+  transition:transform .2s;
+}
+.new-ticket-btn:hover{transform:translateY(-2px)}
+.info-list{list-style:none;font-size:13px}
+.info-list li{
+  padding:10px 0;color:var(--muted);
+  display:flex;gap:10px;align-items:center;
+  border-bottom:1px solid rgba(255,107,53,.08);
+}
+.info-list li:last-child{border-bottom:none}
+.info-list strong{color:var(--text);font-weight:600}
+.info-list a{color:var(--orange-light);margin-left:auto}
+
+.page-head{margin-bottom:24px}
+.page-head h1{font-size:28px;font-weight:800;margin-bottom:6px}
+.page-head p{color:var(--muted);font-size:14px}
+
+.tickets{display:flex;flex-direction:column;gap:12px}
+.ticket{
+  background:var(--card);border:1px solid rgba(255,107,53,.15);
+  border-radius:14px;padding:18px;cursor:pointer;
+  transition:all .2s;
+}
+.ticket:hover{border-color:rgba(255,107,53,.4);transform:translateY(-2px)}
+.ticket-head{
+  display:flex;justify-content:space-between;gap:10px;
+  margin-bottom:8px;align-items:flex-start;
+}
+.ticket-title{font-weight:700;font-size:15px;flex:1}
+.status{
+  padding:4px 10px;border-radius:8px;
+  font-size:11px;font-weight:700;letter-spacing:.5px;
+  text-transform:uppercase;flex-shrink:0;
+}
+.status-open{background:rgba(34,197,94,.15);color:#8ee6a4;border:1px solid rgba(34,197,94,.3)}
+.status-progress{background:rgba(245,166,35,.15);color:#ffcf7d;border:1px solid rgba(245,166,35,.3)}
+.status-closed{background:rgba(184,162,155,.15);color:var(--muted);border:1px solid rgba(184,162,155,.25)}
+.ticket-meta{display:flex;gap:14px;font-size:12px;color:var(--muted);margin-bottom:8px;flex-wrap:wrap}
+.ticket-preview{
+  font-size:13px;color:var(--muted);line-height:1.5;
+  overflow:hidden;text-overflow:ellipsis;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+}
+.empty{text-align:center;padding:60px 20px;color:var(--muted)}
+
+/* Формы и модалки уже в styles.css */
+.messages{display:flex;flex-direction:column;gap:14px;margin-bottom:20px}
+.message{display:flex;gap:12px}
+.av{
+  width:38px;height:38px;border-radius:50%;
+  display:grid;place-items:center;
+  font-weight:700;font-size:14px;color:#fff;flex-shrink:0;
+}
+.av-user{background:linear-gradient(135deg,var(--orange),var(--orange-dark))}
+.av-support{background:linear-gradient(135deg,#22C55E,#16A34A)}
+.av-admin{background:linear-gradient(135deg,#F5A623,#E05520)}
+.msg-content{flex:1;min-width:0}
+.msg-head{
+  display:flex;align-items:center;gap:8px;
+  margin-bottom:4px;font-size:13px;flex-wrap:wrap;
+}
+.msg-role{
+  font-size:10px;padding:2px 7px;border-radius:5px;
+  font-weight:700;text-transform:uppercase;
+}
+.msg-role.user{background:rgba(255,107,53,.2);color:var(--orange-light)}
+.msg-role.support{background:rgba(34,197,94,.2);color:#8ee6a4}
+.msg-role.admin{background:rgba(245,166,35,.2);color:#ffcf7d}
+.msg-time{font-size:11px;color:var(--muted);margin-left:auto}
+.msg-body{
+  background:rgba(255,255,255,.04);padding:12px 15px;
+  border-radius:12px;font-size:14px;line-height:1.55;
+  white-space:pre-wrap;word-break:break-word;
+}
+.reply-box{
+  display:flex;flex-direction:column;gap:10px;padding:16px;
+  background:rgba(255,107,53,.06);
+  border:1px solid rgba(255,107,53,.15);
+  border-radius:14px;
+}
+.reply-box textarea{
+  min-height:90px;background:var(--bg2);
+  border:1px solid rgba(255,107,53,.2);
+  border-radius:10px;padding:12px;
+  color:var(--text);font-family:inherit;font-size:14px;
+  resize:vertical;outline:none;
+}
+.reply-box textarea:focus{border-color:var(--orange)}
+.admin-bar{
+  display:flex;gap:8px;flex-wrap:wrap;padding:14px;
+  background:rgba(245,166,35,.08);
+  border:1px dashed rgba(245,166,35,.35);
+  border-radius:12px;margin-bottom:16px;
+}
+.admin-btn{
+  padding:7px 13px;background:rgba(245,166,35,.15);
+  border:1px solid rgba(245,166,35,.35);
+  border-radius:8px;color:#ffcf7d;
+  font-size:12px;font-weight:600;cursor:pointer;
+  transition:all .2s;font-family:inherit;
+}
+.admin-btn:hover{background:rgba(245,166,35,.3)}
+
+@media (max-width:900px){
+  .container{grid-template-columns:1fr;padding:24px 16px}
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="brand">
+    <div class="brand-mark">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 10l4.55-2.27A1 1 0 0121 8.62v6.76a1 1 0 01-1.45.89L15 14"/>
+        <rect x="3" y="6" width="12" height="12" rx="2"/>
+      </svg>
+    </div>
+    Sink<span>Conferentions</span>
+  </a>
+  <div class="nav-right">
+    <a href="index.html">Главная</a>
+    <a href="pricing.html">Тарифы</a>
+    <a href="features.html">Возможности</a>
+    <a href="support.html" style="color:var(--orange-light)">Поддержка</a>
+  </div>
+</nav>
+
+<div class="container">
+  <aside class="sidebar">
+    <button class="new-ticket-btn" id="newTicketBtn">+ Новое обращение</button>
+
+    <div class="card">
+      <h3>Связь с нами</h3>
+      <ul class="info-list">
+        <li><strong>Email</strong><a href="mailto:support@sinkconferentions.app">support@…</a></li>
+        <li><strong>Ср. ответ</strong><span style="color:var(--green);margin-left:auto">~2 часа</span></li>
+        <li><strong>Работаем</strong><span style="margin-left:auto">24/7</span></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>FAQ</h3>
+      <ul class="info-list" style="font-size:12px">
+        <li>🔊 Не работает микрофон</li>
+        <li>📷 Камера не включается</li>
+        <li>🖥️ Проблемы с демонстрацией</li>
+        <li>💳 Оплата и тарифы</li>
+        <li>🔐 Восстановление доступа</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    <div class="page-head">
+      <h1 id="pageTitle">Мои обращения</h1>
+      <p id="pageSub">Все ваши тикеты в одном месте. Отвечаем быстро.</p>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+      <button class="admin-btn active" data-filter="all" style="background:var(--orange);color:#fff;border-color:var(--orange)">Все</button>
+      <button class="admin-btn" data-filter="open">Открытые</button>
+      <button class="admin-btn" data-filter="progress">В работе</button>
+      <button class="admin-btn" data-filter="closed">Закрытые</button>
+      <button class="admin-btn" data-filter="all-users" id="allUsersFilter" style="display:none;margin-left:auto">
+        🛡️ Все обращения
+      </button>
+    </div>
+
+    <div class="tickets" id="tickets"></div>
+  </main>
+</div>
+
+<!-- Модалка нового тикета -->
+<div class="modal" id="newTicketModal">
+  <div class="modal-card" style="max-width:520px">
+    <h2>Новое обращение</h2>
+    <p class="sub">Опишите проблему — мы ответим быстро</p>
+
+    <label style="display:block;font-size:12px;color:var(--muted);margin:14px 0 6px;font-weight:600">Тема</label>
+    <input type="text" id="ticketSubject" placeholder="Кратко о проблеме" maxlength="120" />
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
+      <div>
+        <label style="display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:600">Категория</label>
+        <select id="ticketCategory" style="width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,107,53,.2);background:var(--bg2);color:var(--text);font-family:inherit">
+          <option value="technical">Техническая</option>
+          <option value="billing">Оплата</option>
+          <option value="account">Аккаунт</option>
+          <option value="feature">Предложение</option>
+        </select>
+      </div>
+      <div>
+        <label style="display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:600">Приоритет</label>
+        <select id="ticketPriority" style="width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,107,53,.2);background:var(--bg2);color:var(--text);font-family:inherit">
+          <option value="low">Низкий</option>
+          <option value="medium" selected>Средний</option>
+          <option value="high">Высокий</option>
+        </select>
+      </div>
+    </div>
+
+    <label style="display:block;font-size:12px;color:var(--muted);margin:14px 0 6px;font-weight:600">Описание</label>
+    <textarea id="ticketDescription" placeholder="Опишите подробно..." style="width:100%;min-height:130px;padding:12px;border-radius:10px;border:1px solid rgba(255,107,53,.2);background:var(--bg2);color:var(--text);font-family:inherit;font-size:14px;resize:vertical;outline:none"></textarea>
+
+    <div class="modal-actions" style="margin-top:20px">
+      <button class="btn btn-ghost" onclick="closeNewTicket()">Отмена</button>
+      <button class="btn btn-primary" id="createTicketBtn">Отправить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Модалка просмотра -->
+<div class="modal" id="viewTicketModal">
+  <div class="modal-card" style="max-width:680px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;gap:12px">
+      <h2 id="viewTicketTitle" style="font-size:18px;line-height:1.3;flex:1">Тикет</h2>
+      <button class="modal-close" onclick="closeViewTicket()" style="background:transparent;border:none;color:var(--muted);font-size:22px;cursor:pointer">✕</button>
+    </div>
+    <div id="ticketStatusBar" style="margin-bottom:16px"></div>
+    <div class="messages" id="ticketMessages"></div>
+    <div class="reply-box" id="replyBox">
+      <textarea id="replyText" placeholder="Ваш ответ..."></textarea>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+        <span style="font-size:11px;color:var(--muted)">Enter — отправить</span>
+        <button class="btn btn-primary" style="padding:10px 22px;font-size:13px" id="sendReplyBtn">Отправить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => document.querySelectorAll(s);
+
+// ---------- Сессия ----------
+const session = (() => { try { return JSON.parse(localStorage.getItem('sink_session')); } catch { return null; } })();
+const currentUser = session || {
+  id: 'guest_' + (localStorage.getItem('displayName') || 'guest'),
+  name: localStorage.getItem('displayName') || 'Гость',
+  login: null,
+  isAdmin: false,
+  avatar: (localStorage.getItem('displayName') || 'Г')[0].toUpperCase()
+};
+if (currentUser.login === 'bdfka') currentUser.isAdmin = true;
+
+// Показать фильтр «Все обращения» для админа
+if (currentUser.isAdmin) $('#allUsersFilter').style.display = 'inline-block';
+
+// ---------- Хранилище тикетов ----------
+const Tickets = {
+  KEY: 'sink_tickets',
+  getAll() { try { return JSON.parse(localStorage.getItem(this.KEY)) || []; } catch { return []; } },
+  save(l) { localStorage.setItem(this.KEY, JSON.stringify(l)); },
+  create({ userId, userName, subject, category, priority, description }) {
+    const list = this.getAll();
+    const t = {
+      id: 'T-' + Date.now().toString(36).toUpperCase(),
+      userId, userName, subject, category, priority,
+      status: 'open',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      messages: [{
+        id: 'm_' + Date.now(),
+        authorId: userId, authorName: userName,
+        role: 'user', text: description,
+        time: new Date().toISOString()
+      }]
+    };
+    list.unshift(t);
+    this.save(list);
+    return t;
+  },
+  get(id) { return this.getAll().find(t => t.id === id); },
+  update(id, patch) {
+    const list = this.getAll();
+    const i = list.findIndex(t => t.id === id);
+    if (i === -1) return;
+    list[i] = { ...list[i], ...patch, updatedAt: new Date().toISOString() };
+    this.save(list);
+    return list[i];
+  },
+  addMessage(id, msg) {
+    const t = this.get(id);
+    if (!t) return;
+    t.messages.push({
+      id: 'm_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+      ...msg, time: new Date().toISOString()
+    });
+    t.updatedAt = new Date().toISOString();
+    if ((msg.role === 'support' || msg.role === 'admin') && t.status === 'open') t.status = 'progress';
+    this.update(id, t);
+    return t;
+  }
+};
+
+let state = { filter: 'all', viewTicketId: null };
+
+// ---------- Фильтры ----------
+$$('[data-filter]').forEach(btn => {
+  btn.onclick = () => {
+    $$('[data-filter]').forEach(b => {
+      b.classList.remove('active');
+      if (b.id !== 'allUsersFilter') {
+        b.style.background = 'rgba(245,166,35,.15)';
+        b.style.color = '#ffcf7d';
+      }
+    });
+    btn.classList.add('active');
+    if (btn.id !== 'allUsersFilter') {
+      btn.style.background = 'var(--orange)';
+      btn.style.color = '#fff';
+    }
+    state.filter = btn.dataset.filter;
+    renderTickets();
+  };
+});
+
+// ---------- Рендер тикетов ----------
+function renderTickets() {
+  const container = $('#tickets');
+  let list = Tickets.getAll();
+
+  if (state.filter === 'all-users') {
+    if (!currentUser.isAdmin) list = [];
+  } else {
+    list = list.filter(t => t.userId === currentUser.id);
+    if (state.filter !== 'all') list = list.filter(t => t.status === state.filter);
+  }
+
+  $('#pageTitle').textContent = state.filter === 'all-users' ? '🛡️ Все обращения' : 'Мои обращения';
+
+  if (list.length === 0) {
+    container.innerHTML = `
+      <div class="empty">
+        <div style="font-size:44px;opacity:.4;margin-bottom:12px">📭</div>
+        <h3 style="color:var(--text);font-size:16px;margin-bottom:6px">${state.filter === 'all-users' ? 'Обращений нет' : 'У вас пока нет обращений'}</h3>
+        <p>${state.filter === 'all-users' ? 'Как только пользователи начнут писать — всё появится.' : 'Если что-то не работает — мы готовы помочь.'}</p>
+      </div>
+    `;
+    return;
+  }
+
+  const statusMap = { open: 'status-open', progress: 'status-progress', closed: 'status-closed' };
+  const statusLabel = { open: 'Открыт', progress: 'В работе', closed: 'Закрыт' };
+  const priorityLabel = { low: 'Низкий', medium: 'Средний', high: 'Высокий' };
+
+  container.innerHTML = list.map(t => {
+    const last = t.messages[t.messages.length - 1];
+    return `
+      <div class="ticket" data-id="${t.id}">
+        <div class="ticket-head">
+          <div class="ticket-title">
+            ${escapeHtml(t.subject)}
+            ${state.filter === 'all-users' ? `<span style="color:var(--orange-light);font-weight:400">· ${escapeHtml(t.userName)}</span>` : ''}
+          </div>
+          <span class="status ${statusMap[t.status]}">${statusLabel[t.status]}</span>
+        </div>
+        <div class="ticket-meta">
+          <span>${priorityLabel[t.priority]}</span>
+          <span>📅 ${formatTime(t.updatedAt)}</span>
+          <span>💬 ${t.messages.length}</span>
+        </div>
+        <div class="ticket-preview">${escapeHtml(last.text)}</div>
+      </div>
+    `;
+  }).join('');
+
+  container.querySelectorAll('.ticket').forEach(el => {
+    el.onclick = () => openViewTicket(el.dataset.id);
+  });
+}
+
+// ---------- Новый тикет ----------
+$('#newTicketBtn').onclick = () => {
+  if (!session) { toast('Войдите в аккаунт', 'error'); setTimeout(() => location.href = 'auth.html', 1200); return; }
+  $('#newTicketModal').classList.add('show');
+};
+
+function closeNewTicket() {
+  $('#newTicketModal').classList.remove('show');
+  $('#ticketSubject').value = '';
+  $('#ticketDescription').value = '';
+}
+
+$('#createTicketBtn').onclick = () => {
+  const subject = $('#ticketSubject').value.trim();
+  const description = $('#ticketDescription').value.trim();
+  if (!subject) return toast('Введите тему', 'error');
+  if (description.length < 10) return toast('Опишите подробнее', 'error');
+
+  const t = Tickets.create({
+    userId: currentUser.id,
+    userName: currentUser.name,
+    subject,
+    category: $('#ticketCategory').value,
+    priority: $('#ticketPriority').value,
+    description
+  });
+  closeNewTicket();
+  toast(`Обращение ${t.id} создано!`, 'success');
+  state.filter = 'all';
+  renderTickets();
+};
+
+// ---------- Просмотр тикета ----------
+function openViewTicket(id) {
+  const t = Tickets.get(id);
+  if (!t) return;
+  if (t.userId !== currentUser.id && !currentUser.isAdmin) {
+    return toast('Нет доступа', 'error');
+  }
+
+  state.viewTicketId = id;
+  $('#viewTicketTitle').innerHTML = `${escapeHtml(t.subject)} <span style="font-size:12px;color:var(--muted);font-weight:400">${t.id}</span>`;
+
+  const statusMap = { open: 'status-open', progress: 'status-progress', closed: 'status-closed' };
+  const statusLabel = { open: '🟢 Открыт', progress: '🟡 В работе', closed: '⚫ Закрыт' };
+
+  let statusBar = `
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+      <span class="status ${statusMap[t.status]}">${statusLabel[t.status]}</span>
+      <span style="font-size:12px;color:var(--muted)">Создан: ${formatTime(t.createdAt)}</span>
+    </div>
+  `;
+
+  if (currentUser.isAdmin) {
+    statusBar += `
+      <div class="admin-bar">
+        <div style="flex-basis:100%;font-size:11px;font-weight:700;color:#ffcf7d;margin-bottom:4px">🛡️ Действия админа</div>
+        <button class="admin-btn" onclick="setStatus('${t.id}','open')">🟢 Открыть</button>
+        <button class="admin-btn" onclick="setStatus('${t.id}','progress')">🟡 В работе</button>
+        <button class="admin-btn" onclick="setStatus('${t.id}','closed')">⚫ Закрыть</button>
+        <button class="admin-btn" onclick="setPriority('${t.id}','high')">🚨 Высокий</button>
+        <button class="admin-btn" onclick="setPriority('${t.id}','low')">🟢 Низкий</button>
+        <button class="admin-btn" onclick="deleteTicket('${t.id}')" style="border-color:rgba(231,76,60,.5);color:#ff9b8a">🗑️ Удалить</button>
+      </div>
+    `;
+  }
+
+  $('#ticketStatusBar').innerHTML = statusBar;
+  renderMessages(t);
+
+  const canReply = t.status !== 'closed' || currentUser.isAdmin;
+  $('#replyBox').style.display = canReply ? 'flex' : 'none';
+  $('#replyText').value = '';
+  $('#viewTicketModal').classList.add('show');
+}
+
+function renderMessages(t) {
+  $('#ticketMessages').innerHTML = t.messages.map(m => {
+    const isUser = m.role === 'user';
+    const isAdm = m.role === 'admin';
+    const roleLabel = isAdm ? 'Админ' : isUser ? 'Пользователь' : 'Поддержка';
+    const roleCls = isAdm ? 'admin' : isUser ? 'user' : 'support';
+    const avCls = isAdm ? 'av-admin' : isUser ? 'av-user' : 'av-support';
+    return `
+      <div class="message">
+        <div class="av ${avCls}">${(m.authorName || '?')[0].toUpperCase()}</div>
+        <div class="msg-content">
+          <div class="msg-head">
+            <strong>${escapeHtml(m.authorName)}</strong>
+            <span class="msg-role ${roleCls}">${roleLabel}</span>
+            <span class="msg-time">${formatTime(m.time)}</span>
+          </div>
+          <div class="msg-body">${escapeHtml(m.text)}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function closeViewTicket() {
+  $('#viewTicketModal').classList.remove('show');
+  state.viewTicketId = null;
+  renderTickets();
+}
+
+// ---------- Ответ ----------
+$('#sendReplyBtn').onclick = sendReply;
+$('#replyText').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendReply(); }
+});
+
+function sendReply() {
+  const text = $('#replyText').value.trim();
+  if (!text || !state.viewTicketId) return;
+  const role = currentUser.isAdmin ? 'admin' : 'user';
+  Tickets.addMessage(state.viewTicketId, {
+    authorId: currentUser.id,
+    authorName: currentUser.name,
+    role, text
+  });
+  $('#replyText').value = '';
+  const t = Tickets.get(state.viewTicketId);
+  renderMessages(t);
+  toast('Ответ отправлен', 'success');
+}
+
+// ---------- Админ-действия ----------
+window.setStatus = (id, status) => {
+  if (!currentUser.isAdmin) return;
+  Tickets.update(id, { status });
+  openViewTicket(id);
+  toast('Статус изменён', 'success');
+};
+window.setPriority = (id, p) => {
+  if (!currentUser.isAdmin) return;
+  Tickets.update(id, { priority: p });
+  openViewTicket(id);
+  toast('Приоритет изменён', 'success');
+};
+window.deleteTicket = (id) => {
+  if (!currentUser.isAdmin) return;
+  if (!confirm('Удалить тикет?')) return;
+  const list = Tickets.getAll().filter(t => t.id !== id);
+  Tickets.save(list);
+  closeViewTicket();
+  toast('Тикет удалён');
+};
+
+// ---------- Утилиты ----------
+function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+function formatTime(iso) {
+  const d = new Date(iso);
+  const diff = (Date.now() - d) / 1000;
+  if (diff < 60) return 'только что';
+  if (diff < 3600) return Math.floor(diff / 60) + ' мин назад';
+  if (diff < 86400) return Math.floor(diff / 3600) + ' ч назад';
+  return d.toLocaleString('ru-RU', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+}
+function toast(msg, type = 'info') {
+  const t = $('#toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type !== 'info' ? ' ' + type : '');
+  clearTimeout(window._tt);
+  window._tt = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ---------- Init ----------
+renderTickets();
+</script>
+</body>
+</html>

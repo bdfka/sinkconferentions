@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: sinkconferentions
+    env: node
+    region: frankfurt
+    plan: free
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: SUPABASE_URL
+        value: https://xndwffdffikhhjowbfjd.supabase.co
+      - key: SUPABASE_ANON_KEY
+        value: sb_publishable_Re5OUTsXDoIPjdO6MWBvxQ_Cv0TYAJ_
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: ADMIN_LOGIN
+        value: bdfka
+      - key: ADMIN_MASTER_KEY
+        sync: false
+      - key: ALLOWED_ORIGINS
+        value: "*"

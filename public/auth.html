@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Вход — SinkConferentions</title>
+<style>
+  :root{
+    --orange:#FF6B35;
+    --orange-dark:#E05520;
+    --orange-light:#FF8C5A;
+    --bg:#140D0B;
+    --bg2:#1F1512;
+    --card:#2A1C18;
+    --text:#FFF5F0;
+    --muted:#B8A29B;
+    --glow:rgba(255,107,53,.45);
+    --red:#E74C3C;
+    --green:#22C55E;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    display:grid;
+    place-items:center;
+    min-height:100vh;
+    padding:20px;
+    position:relative;
+    overflow-x:hidden;
+  }
+  body::before{
+    content:'';
+    position:fixed;
+    inset:-20%;
+    background:
+      radial-gradient(circle at 25% 25%, rgba(255,107,53,.22), transparent 45%),
+      radial-gradient(circle at 75% 75%, rgba(255,140,90,.16), transparent 50%);
+    z-index:-2;
+    animation:bgFloat 20s ease-in-out infinite alternate;
+  }
+  @keyframes bgFloat{
+    0%{transform:translate(0,0) scale(1)}
+    100%{transform:translate(4%,-3%) scale(1.06)}
+  }
+
+  .auth-shell{
+    width:100%;
+    max-width:440px;
+    animation:fadeUp .6s ease;
+  }
+  @keyframes fadeUp{
+    from{opacity:0;transform:translateY(24px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+
+  .brand{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    margin-bottom:28px;
+    font-size:22px;
+    font-weight:800;
+  }
+  .brand-mark{
+    width:40px;height:40px;
+    border-radius:12px;
+    background:linear-gradient(135deg,var(--orange),var(--orange-light));
+    display:grid;place-items:center;
+    box-shadow:0 8px 24px var(--glow);
+    position:relative;
+    overflow:hidden;
+  }
+  .brand-mark::after{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,.4) 50%,transparent 60%);
+    animation:shine 3s linear infinite;
+  }
+  @keyframes shine{
+    0%{transform:translateX(-100%)}
+    100%{transform:translateX(100%)}
+  }
+  .brand span{
+    background:linear-gradient(135deg,var(--orange),var(--orange-light));
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+
+  .card{
+    background:var(--card);
+    border:1px solid rgba(255,107,53,.18);
+    border-radius:20px;
+    padding:32px;
+    box-shadow:0 30px 80px rgba(0,0,0,.6);
+  }
+
+  .tabs{
+    display:flex;
+    gap:6px;
+    background:rgba(0,0,0,.28);
+    padding:5px;
+    border-radius:12px;
+    margin-bottom:26px;
+  }
+  .tab{
+    flex:1;
+    padding:11px;
+    border:none;
+    background:transparent;
+    color:var(--muted);
+    border-radius:9px;
+    font-size:14px;
+    font-weight:600;
+    font-family:inherit;
+    cursor:pointer;
+    transition:all .25s;
+  }
+  .tab.active{
+    background:var(--orange);
+    color:#fff;
+    box-shadow:0 6px 18px var(--glow);
+  }
+
+  .pane{display:none}
+  .pane.active{display:block;animation:fadeUp .35s ease}
+
+  .field{
+    margin-bottom:16px;
+  }
+  .field label{
+    display:block;
+    font-size:12px;
+    color:var(--muted);
+    margin-bottom:6px;
+    font-weight:500;
+    letter-spacing:.3px;
+  }
+  .field input{
+    width:100%;
+    padding:13px 15px;
+    border-radius:11px;
+    border:1px solid rgba(255,107,53,.2);
+    background:var(--bg2);
+    color:var(--text);
+    font-size:14px;
+    font-family:inherit;
+    outline:none;
+    transition:border-color .2s,box-shadow .2s;
+  }
+  .field input:focus{
+    border-color:var(--orange);
+    box-shadow:0 0 0 4px rgba(255,107,53,.12);
+  }
+  .field input::placeholder{color:var(--muted)}
+
+  .btn{
+    width:100%;
+    padding:14px;
+    border-radius:12px;
+    border:none;
+    font-size:15px;
+    font-weight:700;
+    font-family:inherit;
+    cursor:pointer;
+    transition:transform .2s,box-shadow .2s;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg,var(--orange),var(--orange-dark));
+    color:#fff;
+    box-shadow:0 10px 28px var(--glow);
+  }
+  .btn-primary:hover{
+    transform:translateY(-2px);
+    box-shadow:0 16px 36px var(--glow);
+  }
+  .btn-primary:disabled{opacity:.6;cursor:wait;transform:none}
+
+  .btn-ghost{
+    background:rgba(255,255,255,.05);
+    color:var(--text);
+    border:1px solid rgba(255,107,53,.2);
+    margin-top:10px;
+  }
+  .btn-ghost:hover{background:rgba(255,107,53,.12)}
+
+  .divider{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin:20px 0;
+    color:var(--muted);
+    font-size:12px;
+  }
+  .divider::before,.divider::after{
+    content:'';
+    flex:1;
+    height:1px;
+    background:rgba(255,107,53,.15);
+  }
+
+  .checkbox-row{
+    display:flex;
+    align-items:flex-start;
+    gap:8px;
+    font-size:12px;
+    color:var(--muted);
+    margin:14px 0;
+    line-height:1.5;
+    cursor:pointer;
+  }
+  .checkbox-row input{
+    margin-top:2px;
+    accent-color:var(--orange);
+  }
+  .checkbox-row a{color:var(--orange-light);text-decoration:none}
+  .checkbox-row a:hover{text-decoration:underline}
+
+  .error{
+    background:rgba(231,76,60,.12);
+    border:1px solid rgba(231,76,60,.35);
+    color:#ff9b8a;
+    padding:10px 14px;
+    border-radius:10px;
+    font-size:13px;
+    margin-bottom:14px;
+    display:none;
+  }
+  .error.show{display:block;animation:shake .4s}
+  @keyframes shake{
+    0%,100%{transform:translateX(0)}
+    25%{transform:translateX(-6px)}
+    75%{transform:translateX(6px)}
+  }
+
+  .success{
+    background:rgba(34,197,94,.12);
+    border:1px solid rgba(34,197,94,.35);
+    color:#8ee6a4;
+    padding:10px 14px;
+    border-radius:10px;
+    font-size:13px;
+    margin-bottom:14px;
+    display:none;
+  }
+  .success.show{display:block}
+
+  .help{
+    text-align:center;
+    margin-top:18px;
+    font-size:13px;
+    color:var(--muted);
+  }
+  .help a{color:var(--orange-light);text-decoration:none}
+  .help a:hover{text-decoration:underline}
+
+  .back-link{
+    display:block;
+    text-align:center;
+    margin-top:24px;
+    color:var(--muted);
+    font-size:13px;
+    text-decoration:none;
+    transition:color .2s;
+  }
+  .back-link:hover{color:var(--orange-light)}
+
+  .strength{
+    display:flex;
+    gap:4px;
+    margin-top:8px;
+  }
+  .strength-bar{
+    flex:1;
+    height:4px;
+    border-radius:2px;
+    background:rgba(255,255,255,.08);
+    transition:background .25s;
+  }
+  .strength-bar.weak{background:var(--red)}
+  .strength-bar.mid{background:#F5A623}
+  .strength-bar.strong{background:var(--green)}
+
+  .strength-text{
+    font-size:11px;
+    margin-top:6px;
+    color:var(--muted);
+  }
+
+  @media (max-width:480px){
+    .card{padding:24px}
+  }
+</style>
+</head>
+<body>
+
+<div class="auth-shell">
+  <div class="brand">
+    <div class="brand-mark">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 10l4.55-2.27A1 1 0 0121 8.62v6.76a1 1 0 01-1.45.89L15 14"/>
+        <rect x="3" y="6" width="12" height="12" rx="2"/>
+      </svg>
+    </div>
+    Sink<span>Conferentions</span>
+  </div>
+
+  <div class="card">
+    <div class="tabs">
+      <button class="tab active" data-tab="login">Вход</button>
+      <button class="tab" data-tab="register">Регистрация</button>
+    </div>
+
+    <!-- ============ ВХОД ============ -->
+    <div class="pane active" id="pane-login">
+      <div class="error" id="loginError"></div>
+
+      <form id="loginForm" autocomplete="on">
+        <div class="field">
+          <label>Email или логин</label>
+          <input type="text" id="loginIdentifier" placeholder="you@example.com или bdfka" required />
+        </div>
+
+        <div class="field">
+          <label>Пароль</label>
+          <input type="password" id="loginPassword" placeholder="••••••••" required />
+        </div>
+
+        <label class="checkbox-row">
+          <input type="checkbox" id="rememberMe" checked />
+          <span>Запомнить меня на этом устройстве</span>
+        </label>
+
+        <button type="submit" class="btn btn-primary" id="loginBtn">
+          Войти
+        </button>
+      </form>
+
+      <div class="help">
+        Забыли пароль? <a href="#" onclick="toast2('Сброс пароля придёт на email')">Восстановить</a>
+      </div>
+    </div>
+
+    <!-- ============ РЕГИСТРАЦИЯ ============ -->
+    <div class="pane" id="pane-register">
+      <div class="error" id="registerError"></div>
+      <div class="success" id="registerSuccess"></div>
+
+      <form id="registerForm" autocomplete="on">
+        <div class="field">
+          <label>Отображаемое имя</label>
+          <input type="text" id="regName" placeholder="Семён Иванов" maxlength="30" required />
+        </div>
+
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="regEmail" placeholder="you@example.com" required />
+        </div>
+
+        <div class="field">
+          <label>Логин</label>
+          <input type="text" id="regLogin" placeholder="bdfka" maxlength="20" pattern="[a-zA-Z0-9_]{3,20}" required />
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">
+            Латиница, цифры, подчёркивание. 3-20 символов.
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Пароль</label>
+          <input type="password" id="regPassword" placeholder="Минимум 8 символов" required minlength="8" />
+          <div class="strength">
+            <div class="strength-bar" id="sb1"></div>
+            <div class="strength-bar" id="sb2"></div>
+            <div class="strength-bar" id="sb3"></div>
+            <div class="strength-bar" id="sb4"></div>
+          </div>
+          <div class="strength-text" id="strengthText">Введите пароль</div>
+        </div>
+
+        <div class="field">
+          <label>Повторите пароль</label>
+          <input type="password" id="regPassword2" placeholder="••••••••" required />
+        </div>
+
+        <label class="checkbox-row">
+          <input type="checkbox" id="agreeTerms" required />
+          <span>Я принимаю <a href="#" onclick="toast2('Условия использования')">условия</a> и <a href="#" onclick="toast2('Политика конфиденциальности')">политику конфиденциальности</a></span>
+        </label>
+
+        <button type="submit" class="btn btn-primary" id="registerBtn">
+          Создать аккаунт
+        </button>
+      </form>
+
+      <div class="divider">или</div>
+      <button class="btn btn-ghost" onclick="continueAsGuest()">
+        Продолжить как гость
+      </button>
+    </div>
+  </div>
+
+  <a href="index.html" class="back-link">← На главную</a>
+</div>
+
+<div id="toast" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--card);border:1px solid rgba(255,107,53,.3);color:var(--text);padding:13px 22px;border-radius:12px;font-size:14px;box-shadow:0 20px 50px rgba(0,0,0,.5);transition:transform .4s cubic-bezier(.34,1.56,.64,1);z-index:9999"></div>
+
+<script>
+/* ============================================================
+   SinkConferentions — Авторизация
+   ============================================================ */
+
+const $ = (s) => document.querySelector(s);
+
+// ---------- Утилита: тост ----------
+function toast2(msg, type = 'info') {
+  const t = $('#toast');
+  t.textContent = msg;
+  t.style.borderColor = type === 'error' ? 'rgba(231,76,60,.5)' : 'rgba(255,107,53,.3)';
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(window._t_timer);
+  window._t_timer = setTimeout(() => {
+    t.style.transform = 'translateX(-50%) translateY(120px)';
+  }, 2600);
+}
+
+// ---------- Утилита: хеш пароля (простой, для демо) ----------
+async function hashPassword(password) {
+  const enc = new TextEncoder().encode(password + 'sink_salt_v1');
+  const buf = await crypto.subtle.digest('SHA-256', enc);
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// ---------- Локальное хранилище пользователей ----------
+// В реальном приложении это Supabase. Здесь — localStorage для полноценной работы демо.
+const DB = {
+  KEY_USERS: 'sink_users',
+  KEY_SESSION: 'sink_session',
+
+  getUsers() {
+    try { return JSON.parse(localStorage.getItem(this.KEY_USERS)) || []; }
+    catch { return []; }
+  },
+  saveUsers(users) {
+    localStorage.setItem(this.KEY_USERS, JSON.stringify(users));
+  },
+  findUser(identifier) {
+    const id = identifier.toLowerCase().trim();
+    return this.getUsers().find(u =>
+      u.email === id || u.login === id
+    );
+  },
+  createUser({ name, email, login, passwordHash }) {
+    const users = this.getUsers();
+    if (users.find(u => u.email === email.toLowerCase())) {
+      throw new Error('Email уже зарегистрирован');
+    }
+    if (users.find(u => u.login === login.toLowerCase())) {
+      throw new Error('Логин занят');
+    }
+    const user = {
+      id: 'u_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+      name,
+      email: email.toLowerCase(),
+      login: login.toLowerCase(),
+      passwordHash,
+      // bdfka = админ по умолчанию
+      isAdmin: login.toLowerCase() === 'bdfka',
+      plan: login.toLowerCase() === 'bdfka' ? 'pro' : 'free',
+      avatar: name[0].toUpperCase(),
+      createdAt: new Date().toISOString()
+    };
+    users.push(user);
+    this.saveUsers(users);
+    return user;
+  },
+  setSession(user) {
+    localStorage.setItem(this.KEY_SESSION, JSON.stringify({
+      id: user.id, name: user.name, login: user.login, email: user.email,
+      isAdmin: user.isAdmin, plan: user.plan, avatar: user.avatar,
+      loginAt: Date.now()
+    }));
+  },
+  getSession() {
+    try { return JSON.parse(localStorage.getItem(this.KEY_SESSION)); }
+    catch { return null; }
+  },
+  clearSession() {
+    localStorage.removeItem(this.KEY_SESSION);
+  }
+};
+
+// Делаем доступным из других страниц
+window.SinkDB = DB;
+
+// ---------- Проверка: уже вошли? ----------
+(function checkSession() {
+  const s = DB.getSession();
+  if (s) {
+    // Если уже вошли — сразу в главную
+    // Раскомментируй, если хочешь авто-редирект:
+    // location.href = 'index.html';
+  }
+})();
+
+// ---------- Создаём админа по умолчанию ----------
+(async function seedAdmin() {
+  const users = DB.getUsers();
+  if (!users.find(u => u.login === 'bdfka')) {
+    const hash = await hashPassword('bdfka_admin_2026');
+    users.push({
+      id: 'u_admin_bdfka',
+      name: 'Семён Иванов',
+      email: 'bdfka@sinkconferentions.app',
+      login: 'bdfka',
+      passwordHash: hash,
+      isAdmin: true,
+      plan: 'pro',
+      avatar: 'С',
+      createdAt: new Date().toISOString()
+    });
+    DB.saveUsers(users);
+    console.log('[Sink] Аккаунт админа создан: bdfka / bdfka_admin_2026');
+  }
+})();
+
+// ---------- Переключение вкладок ----------
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.onclick = () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    $('#pane-' + tab.dataset.tab).classList.add('active');
+    $('#loginError').classList.remove('show');
+    $('#registerError').classList.remove('show');
+    $('#registerSuccess').classList.remove('show');
+  };
+});
+
+// ---------- Индикатор силы пароля ----------
+$('#regPassword').addEventListener('input', (e) => {
+  const p = e.target.value;
+  const bars = [$('#sb1'), $('#sb2'), $('#sb3'), $('#sb4')];
+  let score = 0;
+
+  if (p.length >= 8) score++;
+  if (/[A-Z]/.test(p) && /[a-z]/.test(p)) score++;
+  if (/\d/.test(p)) score++;
+  if (/[^A-Za-z0-9]/.test(p)) score++;
+
+  bars.forEach((b, i) => {
+    b.className = 'strength-bar';
+    if (i < score) {
+      if (score <= 1) b.classList.add('weak');
+      else if (score === 2) b.classList.add('mid');
+      else b.classList.add('strong');
+    }
+  });
+
+  const text = ['Введите пароль','Очень слабый','Слабый','Хороший','Надёжный'][score];
+  $('#strengthText').textContent = text;
+});
+
+// ---------- Вход ----------
+$('#loginForm').onsubmit = async (e) => {
+  e.preventDefault();
+  const btn = $('#loginBtn');
+  const err = $('#loginError');
+  err.classList.remove('show');
+
+  const identifier = $('#loginIdentifier').value.trim();
+  const password = $('#loginPassword').value;
+
+  if (!identifier || !password) {
+    err.textContent = 'Заполните все поля';
+    err.classList.add('show');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Проверка...';
+
+  await new Promise(r => setTimeout(r, 400)); // имитация запроса
+
+  const user = DB.findUser(identifier);
+  if (!user) {
+    btn.disabled = false;
+    btn.textContent = 'Войти';
+    err.textContent = 'Пользователь не найден';
+    err.classList.add('show');
+    return;
+  }
+
+  const hash = await hashPassword(password);
+  if (hash !== user.passwordHash) {
+    btn.disabled = false;
+    btn.textContent = 'Войти';
+    err.textContent = 'Неверный пароль';
+    err.classList.add('show');
+    return;
+  }
+
+  DB.setSession(user);
+  btn.textContent = '✓ Готово';
+  toast2(`Добро пожаловать, ${user.name}!`);
+
+  setTimeout(() => {
+    location.href = user.isAdmin ? 'profile.html' : 'index.html';
+  }, 800);
+};
+
+// ---------- Регистрация ----------
+$('#registerForm').onsubmit = async (e) => {
+  e.preventDefault();
+  const btn = $('#registerBtn');
+  const err = $('#registerError');
+  const ok = $('#registerSuccess');
+  err.classList.remove('show');
+  ok.classList.remove('show');
+
+  const name = $('#regName').value.trim();
+  const email = $('#regEmail').value.trim();
+  const login = $('#regLogin').value.trim().toLowerCase();
+  const pass = $('#regPassword').value;
+  const pass2 = $('#regPassword2').value;
+
+  if (!name || !email || !login || !pass) {
+    err.textContent = 'Заполните все поля';
+    err.classList.add('show');
+    return;
+  }
+  if (!/^[a-z0-9_]{3,20}$/.test(login)) {
+    err.textContent = 'Логин: латиница, цифры, _ (3-20)';
+    err.classList.add('show');
+    return;
+  }
+  if (pass.length < 8) {
+    err.textContent = 'Пароль минимум 8 символов';
+    err.classList.add('show');
+    return;
+  }
+  if (pass !== pass2) {
+    err.textContent = 'Пароли не совпадают';
+    err.classList.add('show');
+    return;
+  }
+  if (!$('#agreeTerms').checked) {
+    err.textContent = 'Примите условия';
+    err.classList.add('show');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Создание...';
+
+  await new Promise(r => setTimeout(r, 500));
+
+  try {
+    const hash = await hashPassword(pass);
+    const user = DB.createUser({ name, email, login, passwordHash: hash });
+    DB.setSession(user);
+
+    ok.textContent = 'Аккаунт создан! Перенаправление...';
+    ok.classList.add('show');
+    btn.textContent = '✓ Готово';
+
+    setTimeout(() => location.href = 'index.html', 900);
+  } catch (ex) {
+    btn.disabled = false;
+    btn.textContent = 'Создать аккаунт';
+    err.textContent = ex.message;
+    err.classList.add('show');
+  }
+};
+
+// ---------- Продолжить как гость ----------
+function continueAsGuest() {
+  const name = prompt('Как вас зовут?', 'Гость');
+  if (!name) return;
+  localStorage.setItem('displayName', name.trim() || 'Гость');
+  location.href = 'index.html';
+}
+</script>
+</body>
+</html>

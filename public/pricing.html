@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Тарифы — SinkConferentions</title>
+<style>
+  :root{
+    --orange:#FF6B35;--orange-dark:#E05520;--orange-light:#FF8C5A;
+    --bg:#140D0B;--bg2:#1F1512;--card:#2A1C18;
+    --text:#FFF5F0;--muted:#B8A29B;--glow:rgba(255,107,53,.45);
+    --gold:#F5A623;--purple:#A855F7;--green:#22C55E;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    background:var(--bg);color:var(--text);min-height:100vh;
+    overflow-x:hidden;
+  }
+  body::before{
+    content:'';position:fixed;inset:-20%;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(255,107,53,.18), transparent 45%),
+      radial-gradient(circle at 80% 80%, rgba(168,85,247,.10), transparent 50%);
+    z-index:-1;
+    animation:bgFloat 18s ease-in-out infinite alternate;
+  }
+  @keyframes bgFloat{
+    0%{transform:translate(0,0) scale(1)}
+    100%{transform:translate(3%,-2%) scale(1.05)}
+  }
+
+  .navbar{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:20px 40px;
+    background:rgba(20,13,11,.85);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(255,107,53,.12);
+    position:sticky;top:0;z-index:50;
+  }
+  .brand{
+    display:flex;align-items:center;gap:10px;
+    font-weight:800;font-size:18px;text-decoration:none;color:var(--text);
+  }
+  .brand-mark{
+    width:32px;height:32px;border-radius:9px;
+    background:linear-gradient(135deg,var(--orange),var(--orange-light));
+    display:grid;place-items:center;
+    box-shadow:0 6px 18px var(--glow);
+  }
+  .brand span{
+    background:linear-gradient(135deg,var(--orange),var(--orange-light));
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  }
+  .nav-right{display:flex;gap:16px;align-items:center;font-size:14px}
+  .nav-right a{color:var(--muted);text-decoration:none;transition:color .2s}
+  .nav-right a:hover{color:var(--orange-light)}
+
+  .hero{
+    text-align:center;
+    padding:70px 24px 30px;
+  }
+  .hero h1{
+    font-size:clamp(32px,5vw,52px);
+    font-weight:900;
+    letter-spacing:-1.5px;
+    line-height:1.1;
+    margin-bottom:16px;
+    background:linear-gradient(135deg,var(--text),var(--orange-light));
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+  .hero p{
+    color:var(--muted);font-size:17px;
+    max-width:560px;margin:0 auto;
+    line-height:1.6;
+  }
+
+  /* Переключатель месяц/год */
+  .billing-toggle{
+    display:flex;justify-content:center;gap:6px;
+    margin:36px auto 0;
+    background:rgba(0,0,0,.3);
+    padding:5px;border-radius:12px;
+    width:max-content;
+  }
+  .billing-toggle button{
+    padding:10px 20px;
+    border:none;background:transparent;
+    color:var(--muted);border-radius:9px;
+    font-size:13px;font-weight:600;font-family:inherit;
+    cursor:pointer;transition:all .2s;
+  }
+  .billing-toggle button.active{
+    background:var(--orange);color:#fff;
+    box-shadow:0 6px 18px var(--glow);
+  }
+  .save-badge{
+    font-size:10px;padding:2px 6px;border-radius:5px;
+    background:var(--green);color:#fff;margin-left:5px;
+    font-weight:700;
+  }
+
+  /* Сетка тарифов */
+  .plans{
+    max-width:1200px;
+    margin:50px auto 60px;
+    padding:0 24px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:24px;
+    align-items:stretch;
+  }
+
+  .plan{
+    background:var(--card);
+    border:1px solid rgba(255,107,53,.15);
+    border-radius:24px;
+    padding:32px;
+    display:flex;flex-direction:column;
+    position:relative;
+    transition:all .35s cubic-bezier(.34,1.56,.64,1);
+    animation:fadeUp .6s ease backwards;
+  }
+  .plan:nth-child(1){animation-delay:.05s}
+  .plan:nth-child(2){animation-delay:.15s}
+  .plan:nth-child(3){animation-delay:.25s}
+  @keyframes fadeUp{
+    from{opacity:0;transform:translateY(30px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+
+  .plan:hover{
+    transform:translateY(-8px);
+    border-color:rgba(255,107,53,.35);
+    box-shadow:0 30px 70px rgba(0,0,0,.5);
+  }
+
+  .plan.featured{
+    border-color:var(--orange);
+    background:linear-gradient(180deg,rgba(255,107,53,.08),var(--card));
+    box-shadow:0 20px 60px rgba(255,107,53,.2);
+    transform:scale(1.03);
+  }
+  .plan.featured:hover{transform:scale(1.03) translateY(-8px)}
+
+  .popular-tag{
+    position:absolute;top:-14px;left:50%;
+    transform:translateX(-50%);
+    background:linear-gradient(135deg,var(--orange),var(--orange-dark));
+    color:#fff;padding:6px 16px;border-radius:999px;
+    font-size:11px;font-weight:700;letter-spacing:1px;
+    text-transform:uppercase;
+    box-shadow:0 8px 20px var(--glow);
+    white-space:nowrap;
+  }
+
+  .plan-name{
+    font-size:22px;font-weight:800;
+    margin-bottom:6px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .plan-icon{
+    width:34px;height:34px;border-radius:10px;
+    display:grid;place-items:center;font-size:18px;
+  }
+  .plan-free .plan-icon{background:rgba(184,162,155,.2)}
+  .plan-start .plan-icon{background:rgba(245,166,35,.2)}
+  .plan-pro .plan-icon{background:rgba(168,85,247,.2)}
+
+  .plan-desc{
+    color:var(--muted);font-size:14px;
+    margin-bottom:24px;line-height:1.5;
+    min-height:42px;
+  }
+
+  .plan-price{
+    display:flex;align-items:flex-end;gap:6px;
+    margin-bottom:6px;
+  }
+  .plan-price .amount{
+    font-size:44px;font-weight:900;
+    line-height:1;letter-spacing:-2px;
+  }
+  .plan-price .currency{
+    font-size:20px;font-weight:700;
+    color:var(--muted);padding-bottom:6px;
+  }
+  .plan-price .period{
+    font-size:14px;color:var(--muted);
+    padding-bottom:8px;
+  }
+  .old-price{
+    font-size:14px;color:var(--muted);
+    text-decoration:line-through;
+    margin-bottom:20px;
+    min-height:20px;
+  }
+
+  .plan-cta{
+    padding:14px;
+    border-radius:12px;
+    border:none;font-family:inherit;
+    font-size:15px;font-weight:700;
+    cursor:pointer;transition:all .25s;
+    margin-bottom:24px;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .plan-cta.primary{
+    background:linear-gradient(135deg,var(--orange),var(--orange-dark));
+    color:#fff;
+    box-shadow:0 10px 28px var(--glow);
+  }
+  .plan-cta.primary:hover{transform:translateY(-2px);box-shadow:0 16px 36px var(--glow)}
+
+  .plan-cta.ghost{
+    background:rgba(255,255,255,.05);
+    color:var(--text);
+    border:1px solid rgba(255,107,53,.3);
+  }
+  .plan-cta.ghost:hover{background:rgba(255,107,53,.15)}
+
+  .plan-cta:disabled{
+    background:rgba(255,255,255,.05);
+    color:var(--muted);
+    cursor:default;
+    border:1px solid rgba(255,255,255,.05);
+    box-shadow:none;
+  }
+
+  .plan-features{
+    list-style:none;
+    display:flex;flex-direction:column;
+    gap:12px;
+  }
+  .plan-features li{
+    display:flex;align-items:flex-start;gap:10px;
+    font-size:14px;
+    line-height:1.5;
+  }
+  .check{
+    flex-shrink:0;
+    width:18px;height:18px;border-radius:50%;
+    display:grid;place-items:center;
+    background:rgba(34,197,94,.2);
+    color:var(--green);
+    font-size:11px;font-weight:700;
+    margin-top:1px;
+  }
+  .check.no{
+    background:rgba(184,162,155,.15);
+    color:var(--muted);
+  }
+
+  /* Сравнение */
+  .compare{
+    max-width:1200px;
+    margin:60px auto 80px;
+    padding:0 24px;
+  }
+  .compare h2{
+    text-align:center;
+    font-size:28px;font-weight:800;
+    margin-bottom:32px;
+    letter-spacing:-.5px;
+  }
+
+  .compare-table{
+    background:var(--card);
+    border:1px solid rgba(255,107,53,.15);
+    border-radius:20px;
+    overflow:hidden;
+  }
+  table{width:100%;border-collapse:collapse}
+  thead{
+    background:rgba(255,107,53,.08);
+  }
+  th,td{
+    padding:16px 20px;
+    text-align:left;
+    font-size:14px;
+    border-bottom:1px solid rgba(255,107,53,.08);
+  }
+  th{
+    font-weight:700;
+    font-size:13px;
+    letter-spacing:.5px;
+    text-transform:uppercase;
+    color:var(--orange-light);
+  }
+  th:not(:first-child),td:not(:first-child){text-align:center}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:rgba(255,107,53,.04)}
+  td:first-child{font-weight:500}
+  .cell-yes{color:var(--green);font-size:18px}
+  .cell-no{color:var(--muted);font-size:18px}
+
+  /* FAQ */
+  .faq{
+    max-width:800px;
+    margin:0 auto 80px;
+    padding:0 24px;
+  }
+  .faq h2{
+    text-align:center;font-size:28px;font-weight:800;
+    margin-bottom:32px;letter-spacing:-.5px;
+  }
+  .faq-item{
+    background:var(--card);
+    border:1px solid rgba(255,107,53,.15);
+    border-radius:14px;
+    margin-bottom:12px;
+    overflow:hidden;
+    transition:border-color .2s;
+  }
+  .faq-item:hover{border-color:rgba(255,107,53,.35)}
+  .faq-q{
+    padding:18px 22px;
+    display:flex;justify-content:space-between;align-items:center;
+    cursor:pointer;
+    font-weight:600;font-size:15px;
+    user-select:none;
+  }
+  .faq-q::after{
+    content:'+';
+    font-size:22px;color:var(--orange);
+    transition:transform .3s;
+  }
+  .faq-item.open .faq-q::after{transform:rotate(45deg)}
+  .faq-a{
+    padding:0 22px;
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .35s ease,padding .35s ease;
+    color:var(--muted);
+    font-size:14px;line-height:1.6;
+  }
+  .faq-item.open .faq-a{
+    max-height:300px;
+    padding:0 22px 20px;
+  }
+
+  @media (max-width:900px){
+    .navbar{padding:14px 20px}
+    .nav-right a{display:none}
+    .plan.featured{transform:scale(1)}
+    .plan.featured:hover{transform:translateY(-8px)}
+    th,td{padding:12px 10px;font-size:13px}
+  }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="brand">
+    <div class="brand-mark">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 10l4.55-2.27A1 1 0 0121 8.62v6.76a1 1 0 01-1.45.89L15 14"/>
+        <rect x="3" y="6" width="12" height="12" rx="2"/>
+      </svg>
+    </div>
+    Sink<span>Conferentions</span>
+  </a>
+  <div class="nav-right">
+    <a href="index.html">Главная</a>
+    <a href="features.html">Возможности</a>
+    <a href="pricing.html" style="color:var(--orange-light)">Тарифы</a>
+    <a href="support.html">Поддержка</a>
+    <a href="auth.html" class="brand" style="background:var(--orange);padding:8px 16px;border-radius:10px;font-size:13px;font-weight:700;box-shadow:0 6px 18px var(--glow)">
+      <span style="-webkit-text-fill-color:#fff;background:none">Войти</span>
+    </a>
+  </div>
+</nav>
+
+<section class="hero">
+  <h1>Простые и честные тарифы</h1>
+  <p>Начните бесплатно. Перейдите на платный план, когда потребуется больше возможностей.</p>
+
+  <div class="billing-toggle">
+    <button class="active" data-period="month">Месяц</button>
+    <button data-period="year">Год <span class="save-badge">−20%</span></button>
+  </div>
+</section>
+
+<section class="plans">
+
+  <!-- ============ FREE ============ -->
+  <div class="plan plan-free">
+    <div class="plan-name">
+      <div class="plan-icon">🌱</div>
+      Free
+    </div>
+    <div class="plan-desc">
+      Для знакомства с платформой и коротких звонков с друзьями.
+    </div>
+
+    <div class="plan-price">
+      <span class="amount">0</span>
+      <span class="currency">₽</span>
+      <span class="period">навсегда</span>
+    </div>
+    <div class="old-price"></div>
+
+    <button class="plan-cta ghost" data-plan="free">
+      Начать бесплатно
+    </button>
+
+    <ul class="plan-features">
+      <li><span class="check">✓</span> До 5 участников в звонке</li>
+      <li><span class="check">✓</span> До 40 минут на конференцию</li>
+      <li><span class="check">✓</span> HD-видео 720p</li>
+      <li><span class="check">✓</span> Демонстрация экрана</li>
+      <li><span class="check">✓</span> Общая доска для рисования</li>
+      <li><span class="check">✓</span> Чат с текстом и эмодзи</li>
+      <li><span class="check no">✕</span> Запись звонков</li>
+      <li><span class="check no">✕</span> Опросы и реакции</li>
+      <li><span class="check no">✕</span> Приоритетная поддержка</li>
+    </ul>
+  </div>
+
+  <!-- ============ START ============ -->
+  <div class="plan plan-start featured">
+    <div class="popular-tag">Популярный</div>
+    <div class="plan-name">
+      <div class="plan-icon">🚀</div>
+      Start
+    </div>
+    <div class="plan-desc">
+      Для команд, фрилансеров и небольших компаний. Всё что нужно для работы.
+    </div>
+
+    <div class="plan-price">
+      <span class="amount" data-month="490" data-year="392">490</span>
+      <span class="currency">₽</span>
+      <span class="period">/ месяц</span>
+    </div>
+    <div class="old-price"></div>
+
+    <button class="plan-cta primary" data-plan="start">
+      Попробовать 14 дней
+    </button>
+
+    <ul class="plan-features">
+      <li><span class="check">✓</span> До 25 участников</li>
+      <li><span class="check">✓</span> До 4 часов на конференцию</li>
+      <li><span class="check">✓</span> Full HD-видео 1080p</li>
+      <li><span class="check">✓</span> Демонстрация экрана + рисование</li>
+      <li><span class="check">✓</span> Доска без ограничений</li>
+      <li><span class="check">✓</span> Чат, фото, личные сообщения</li>
+      <li><span class="check">✓</span> <strong>Опросы и реакции</strong></li>
+      <li><span class="check">✓</span> <strong>Запись звонков (10 ч/мес)</strong></li>
+      <li><span class="check">✓</span> Приоритетная поддержка (4 ч)</li>
+    </ul>
+  </div>
+
+  <!-- ============ PRO ============ -->
+  <div class="plan plan-pro">
+    <div class="plan-name">
+      <div class="plan-icon">💎</div>
+      Pro
+    </div>
+    <div class="plan-desc">
+      Максимум возможностей. Для крупных команд, вебинаров и корпораций.
+    </div>
+
+    <div class="plan-price">
+      <span class="amount" data-month="1290" data-year="1032">1 290</span>
+      <span class="currency">₽</span>
+      <span class="period">/ месяц</span>
+    </div>
+    <div class="old-price"></div>
+
+    <button class="plan-cta primary" data-plan="pro">
+      Оформить Pro
+    </button>
+
+    <ul class="plan-features">
+      <li><span class="check">✓</span> <strong>До 200 участников</strong></li>
+      <li><span class="check">✓</span> <strong>Без ограничений по времени</strong></li>
+      <li><span class="check">✓</span> <strong>4K-видео и 60 fps</strong></li>
+      <li><span class="check">✓</span> Демонстрация экрана до 4 потоков</li>
+      <li><span class="check">✓</span> Бесконечная доска + сохранение PNG</li>
+      <li><span class="check">✓</span> Чат + файлы до 100 МБ</li>
+      <li><span class="check">✓</span> Опросы с экспортом статистики</li>
+      <li><span class="check">✓</span> <strong>Запись без ограничений + облако</strong></li>
+      <li><span class="check">✓</span> <strong>Админ-панель и модерация</strong></li>
+      <li><span class="check">✓</span> <strong>Техподдержка 24/7 · 30 минут</strong></li>
+      <li><span class="check">✓</span> API и вебхуки</li>
+      <li><span class="check">✓</span> Брендирование (лого, цвета)</li>
+    </ul>
+  </div>
+
+</section>
+
+<!-- ============ СРАВНЕНИЕ ============ -->
+<section class="compare">
+  <h2>Подробное сравнение</h2>
+  <div class="compare-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Возможность</th>
+          <th>Free</th>
+          <th>Start</th>
+          <th>Pro</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Участники</td>
+          <td>5</td>
+          <td>25</td>
+          <td>200</td>
+        </tr>
+        <tr>
+          <td>Длительность звонка</td>
+          <td>40 мин</td>
+          <td>4 часа</td>
+          <td>∞</td>
+        </tr>
+        <tr>
+          <td>Качество видео</td>
+          <td>720p</td>
+          <td>1080p</td>
+          <td>4K · 60fps</td>
+        </tr>
+        <tr>
+          <td>Демонстрация экрана</td>
+          <td class="cell-yes">✓</td>
+          <td class="cell-yes">✓</td>
+          <td class="cell-yes">✓ ×4</td>
+        </tr>
+        <tr>
+          <td>Доска для рисования</td>
+          <td class="cell-yes">✓</td>
+          <td class="cell-yes">✓</td>
+          <td class="cell-yes">✓ + экспорт</td>
+        </tr>
+        <tr>
+          <td>Чат + фото</td>
+          <td class="cell-yes">✓</td>
+          <td class="cell-yes">✓</td>
+          <td class="cell-yes">✓ 100 МБ</td>
+        </tr>
+        <tr>
+          <td>Личные сообщения</td>
+          <td class="cell-no">✕</td>
+          <td class="cell-yes">✓</td>
+          <td class="cell-yes">✓</td>
+        </tr>
+        <tr>
+          <td>Опросы</td>
+          <td class="cell-no">✕</td>
+          <td class="cell-yes">✓</td>
+          <td class="cell-yes">✓ + экспорт</td>
+        </tr>
+        <tr>
+          <td>Реакции и поднятие рук</td>
+          <td class="cell-no">✕</td>
+          <td class="cell-yes">✓</td>
+          <td class="cell-yes">✓</td>
+        </tr>
+        <tr>
+          <td>Запись звонков</td>
+          <td class="cell-no">✕</td>
+          <td>10 ч/мес</td>
+          <td>∞ + облако</td>
+        </tr>
+        <tr>
+          <td>Админ-панель</td>
+          <td class="cell-no">✕</td>
+          <td class="cell-no">✕</td>
+          <td class="cell-yes">✓</td>
+        </tr>
+        <tr>
+          <td>API и вебхуки</td>
+          <td class="cell-no">✕</td>
+          <td class="cell-no">✕</td>
+          <td class="cell-yes">✓</td>
+        </tr>
+        <tr>
+          <td>Брендирование</td>
+          <td class="cell-no">✕</td>
+          <td class="cell-no">✕</td>
+          <td class="cell-yes">✓</td>
+        </tr>
+        <tr>
+          <td>Время ответа поддержки</td>
+          <td>24 ч</td>
+          <td>4 ч</td>
+          <td>30 мин · 24/7</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="faq">
+  <h2>Частые вопросы</h2>
+
+  <div class="faq-item">
+    <div class="faq-q">Можно ли поменять тариф в любой момент?</div>
+    <div class="faq-a">Да. Вы можете перейти на более высокий тариф мгновенно — разница будет списана пропорционально оставшимся дням. Понижение вступит в силу с начала следующего платёжного периода.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Что будет, когда закончится пробный период?</div>
+    <div class="faq-a">Ничего страшного. Вы автоматически вернётесь на план Free. Мы никогда не списываем деньги без вашего подтверждения и предупреждаем за 3 дня до окончания пробного периода.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Есть ли скидка при оплате за год?</div>
+    <div class="faq-a">Да, при годовой оплате вы экономите 20%. Например, план Start за год стоит 4 704 ₽ вместо 5 880 ₽.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Как работает запись звонков?</div>
+    <div class="faq-a">На плане Start доступно 10 часов записи в месяц, на Pro — без ограничений с автоматической загрузкой в облако. Запись включает видео, аудио и демонстрацию экрана. Все участники получают уведомление о начале записи.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Что если мне нужен тариф для 500+ участников?</div>
+    <div class="faq-a">Напишите нам в <a href="support.html" style="color:var(--orange-light)">техподдержку</a> — мы предложим индивидуальные условия Enterprise с безлимитным количеством участников, SLA и выделенным менеджером.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Безопасны ли мои данные?</div>
+    <div class="faq-a">Все звонки используют peer-to-peer шифрование WebRTC (DTLS-SRTP). Мы не храним видео и аудио, кроме случаев активной записи. Данные аккаунта хранятся с шифрованием AES-256.</div>
+  </div>
+</section>
+
+<div id="toast" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--card);border:1px solid rgba(255,107,53,.3);color:var(--text);padding:13px 22px;border-radius:12px;font-size:14px;box-shadow:0 20px 50px rgba(0,0,0,.5);transition:transform .4s cubic-bezier(.34,1.56,.64,1);z-index:9999"></div>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => document.querySelectorAll(s);
+
+// ---------- Переключение месяц/год ----------
+let currentPeriod = 'month';
+
+$$('.billing-toggle button').forEach(btn => {
+  btn.onclick = () => {
+    $$('.billing-toggle button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentPeriod = btn.dataset.period;
+    updatePrices();
+  };
+});
+
+function updatePrices() {
+  $$('.plan-price .amount').forEach(el => {
+    const m = el.dataset.month;
+    const y = el.dataset.year;
+    if (!m) return; // Free
+    el.textContent = currentPeriod === 'month' ? formatNum(m) : formatNum(y);
+  });
+
+  $$('.plan-price .period').forEach(el => {
+    if (el.textContent.includes('навсегда')) return;
+    el.textContent = currentPeriod === 'month' ? '/ месяц' : '/ мес (при оплате за год)';
+  });
+
+  // Показываем старую цену
+  $$('.old-price').forEach(el => {
+    const plan = el.closest('.plan');
+    const amount = plan.querySelector('.amount');
+    if (!amount.dataset.month) { el.textContent = ''; return; }
+    if (currentPeriod === 'year') {
+      const monthPrice = +amount.dataset.month;
+      el.textContent = `Экономия ${formatNum(monthPrice * 12 - +amount.dataset.year)} ₽ в год`;
+      el.style.color = 'var(--green)';
+      el.style.textDecoration = 'none';
+    } else {
+      const yearPrice = +amount.dataset.year;
+      const fullYear = +amount.dataset.month * 12;
+      el.textContent = `При годовой оплате: ${formatNum(yearPrice * 12)} ₽/год`;
+      el.style.color = '';
+      el.style.textDecoration = 'none';
+    }
+  });
+}
+
+function formatNum(n) {
+  return (+n).toLocaleString('ru-RU');
+}
+
+// ---------- Кнопки выбора тарифа ----------
+$$('.plan-cta').forEach(btn => {
+  btn.onclick = () => {
+    const plan = btn.dataset.plan;
+    const session = JSON.parse(localStorage.getItem('sink_session') || 'null');
+
+    if (!session) {
+      toast('Войдите в аккаунт, чтобы выбрать тариф');
+      setTimeout(() => location.href = 'auth.html', 1200);
+      return;
+    }
+
+    if (plan === 'free') {
+      // Понижение на Free
+      session.plan = 'free';
+      localStorage.setItem('sink_session', JSON.stringify(session));
+      toast('Вы на тарифе Free');
+      return;
+    }
+
+    // Имитация перехода к оплате
+    toast(`Оформление тарифа ${plan.toUpperCase()}...`);
+    setTimeout(() => {
+      session.plan = plan;
+      localStorage.setItem('sink_session', JSON.stringify(session));
+      toast(`✅ Тариф ${plan.toUpperCase()} активирован!`);
+    }, 1200);
+  };
+});
+
+// ---------- FAQ аккордеон ----------
+$$('.faq-item').forEach(item => {
+  item.querySelector('.faq-q').onclick = () => {
+    item.classList.toggle('open');
+  };
+});
+
+// ---------- Тост ----------
+function toast(msg, type = 'info') {
+  const t = $('#toast');
+  t.textContent = msg;
+  t.style.borderColor = type === 'error' ? 'rgba(231,76,60,.5)' : 'rgba(255,107,53,.3)';
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(window._tt);
+  window._tt = setTimeout(() => {
+    t.style.transform = 'translateX(-50%) translateY(120px)';
+  }, 2800);
+}
+
+// Инициализация
+updatePrices();
+</script>
+</body>
+</html>

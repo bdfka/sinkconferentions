@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Профиль — SinkConferentions</title>
+<link rel="stylesheet" href="styles.css" />
+<style>
+.container{max-width:1200px;margin:0 auto;padding:40px 24px}
+
+.profile-head{
+  background:linear-gradient(135deg,var(--card),var(--card2));
+  border:1px solid rgba(255,107,53,.2);
+  border-radius:22px;padding:32px;
+  display:flex;gap:24px;align-items:center;
+  margin-bottom:28px;position:relative;overflow:hidden;
+}
+.profile-head::before{
+  content:'';position:absolute;top:-50%;right:-10%;
+  width:400px;height:400px;
+  background:radial-gradient(circle,rgba(255,107,53,.15),transparent 70%);
+  pointer-events:none;
+}
+.profile-avatar{
+  width:90px;height:90px;border-radius:24px;
+  background:linear-gradient(135deg,var(--orange),var(--orange-dark));
+  display:grid;place-items:center;
+  font-size:36px;font-weight:900;color:#fff;
+  box-shadow:0 12px 30px var(--glow);flex-shrink:0;
+  position:relative;z-index:1;
+}
+.profile-info{flex:1;position:relative;z-index:1}
+.profile-info h1{
+  font-size:28px;font-weight:900;letter-spacing:-.5px;
+  margin-bottom:6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
+.badge{
+  padding:4px 10px;border-radius:8px;
+  font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;
+}
+.badge.admin{background:linear-gradient(135deg,#F5A623,#E05520);color:#fff}
+.badge.pro{background:linear-gradient(135deg,#A855F7,#7E22CE);color:#fff}
+.badge.start{background:linear-gradient(135deg,#F5A623,#E05520);color:#fff}
+.badge.free{background:rgba(184,162,155,.25);color:var(--muted)}
+.badge.online{background:rgba(34,197,94,.2);color:#8ee6a4;border:1px solid rgba(34,197,94,.35)}
+.profile-info p{color:var(--muted);font-size:14px;margin-bottom:4px}
+
+.stats-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:14px;margin-bottom:28px;
+}
+.stat-card{
+  background:var(--card);border:1px solid rgba(255,107,53,.15);
+  border-radius:16px;padding:22px;transition:all .3s;
+}
+.stat-card:hover{transform:translateY(-3px);border-color:rgba(255,107,53,.35)}
+.stat-label{
+  font-size:11px;color:var(--muted);
+  text-transform:uppercase;letter-spacing:1px;
+  font-weight:700;margin-bottom:8px;
+}
+.stat-value{
+  font-size:30px;font-weight:900;letter-spacing:-1px;
+  background:linear-gradient(135deg,var(--text),var(--orange-light));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+
+.section{
+  background:var(--card);border:1px solid rgba(255,107,53,.18);
+  border-radius:20px;padding:28px;margin-bottom:24px;
+}
+.section-head{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:22px;flex-wrap:wrap;gap:12px;
+}
+.section-head h2{font-size:20px;font-weight:800}
+
+.btn{padding:11px 20px;border-radius:11px;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.btn-primary{background:linear-gradient(135deg,var(--orange),var(--orange-dark));color:#fff;box-shadow:0 8px 22px var(--glow)}
+.btn-primary:hover{transform:translateY(-2px)}
+.btn-ghost{background:rgba(255,255,255,.05);color:var(--text);border:1px solid rgba(255,107,53,.25)}
+.btn-ghost:hover{background:rgba(255,107,53,.15)}
+
+.plan-badge{
+  display:inline-flex;padding:6px 14px;border-radius:10px;
+  font-size:13px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;
+}
+.plan-badge.free{background:rgba(184,162,155,.2);color:var(--muted)}
+.plan-badge.start{background:linear-gradient(135deg,#F5A623,#E05520);color:#fff}
+.plan-badge.pro{background:linear-gradient(135deg,#A855F7,#7E22CE);color:#fff;box-shadow:0 6px 18px rgba(168,85,247,.35)}
+
+.sub-info{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:20px;flex-wrap:wrap;
+}
+.sub-info .info{font-size:14px;color:var(--muted)}
+.sub-info .info strong{color:var(--text);display:block;margin-bottom:4px;font-size:15px}
+
+@media (max-width:768px){
+  .profile-head{flex-direction:column;text-align:center;padding:24px}
+  .container{padding:24px 16px}
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="brand">
+    <div class="brand-mark">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 10l4.55-2.27A1 1 0 0121 8.62v6.76a1 1 0 01-1.45.89L15 14"/>
+        <rect x="3" y="6" width="12" height="12" rx="2"/>
+      </svg>
+    </div>
+    Sink<span>Conferentions</span>
+  </a>
+  <div class="nav-right">
+    <a href="index.html">Главная</a>
+    <a href="pricing.html">Тарифы</a>
+    <a href="support.html">Поддержка</a>
+    <a href="admin.html" id="adminLink" style="display:none;color:var(--orange-light)">🛡️ Админ</a>
+    <a href="#" onclick="logout(event)">Выйти</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="profile-head">
+    <div class="profile-avatar" id="avatar">?</div>
+    <div class="profile-info">
+      <h1 id="userFullName">Загрузка...</h1>
+      <p id="userLogin">@…</p>
+      <p id="userEmail">…</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;position:relative;z-index:1">
+      <a href="index.html" class="btn btn-primary">Новая конференция</a>
+      <a href="pricing.html" class="btn btn-ghost">Мой тариф</a>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-label">Звонков проведено</div><div class="stat-value" id="statCalls">—</div></div>
+    <div class="stat-card"><div class="stat-label">Часов в эфире</div><div class="stat-value" id="statHours">—</div></div>
+    <div class="stat-card"><div class="stat-label">Обращений</div><div class="stat-value" id="statTickets">—</div></div>
+    <div class="stat-card"><div class="stat-label">Активных тикетов</div><div class="stat-value" id="statActive">—</div></div>
+  </div>
+
+  <!-- Текущая подписка -->
+  <div class="section" id="subscriptionSection">
+    <div class="section-head">
+      <h2>💎 Моя подписка</h2>
+    </div>
+    <div class="sub-info">
+      <div>
+        <span class="plan-badge" id="planBadge">FREE</span>
+        <div class="info" style="margin-top:12px">
+          <strong id="planName">Free</strong>
+          <span id="planDesc">Базовый тариф</span>
+        </div>
+      </div>
+      <div class="info" id="expiresInfo">Бессрочно</div>
+      <a href="pricing.html" class="btn btn-primary">Улучшить тариф</a>
+    </div>
+  </div>
+
+  <!-- Мои тикеты -->
+  <div class="section">
+    <div class="section-head">
+      <h2>💬 Мои обращения</h2>
+      <a href="support.html" class="btn btn-ghost">Все →</a>
+    </div>
+    <div id="myTickets"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = (s) => document.querySelector(s);
+
+const session = (() => { try { return JSON.parse(localStorage.getItem('sink_session')); } catch { return null; } })();
+if (!session) { location.href = 'auth.html'; }
+
+const isAdmin = session?.login === 'bdfka' || session?.isAdmin;
+
+// Показ ссылки админки
+if (isAdmin) $('#adminLink').style.display = 'inline-block';
+
+// Показать бейджи
+const badges = [];
+if (isAdmin) badges.push('<span class="badge admin">🛡️ Админ</span>');
+const planMap = { free: 'Free', start: 'Start', pro: 'Pro' };
+if (session.plan) badges.push(`<span class="badge ${session.plan}">${planMap[session.plan] || session.plan}</span>`);
+badges.push('<span class="badge online">● В сети</span>');
+
+$('#avatar').textContent = session.avatar || session.name[0].toUpperCase();
+$('#userFullName').innerHTML = escapeHtml(session.name) + ' ' + badges.join(' ');
+$('#userLogin').textContent = '@' + session.login;
+$('#userEmail').textContent = session.email;
+
+// Подписка
+function renderSubscription() {
+  const subs = JSON.parse(localStorage.getItem('sink_subscriptions') || '[]');
+  const sub = subs.find(s => s.userId === session.id);
+  const plan = sub?.plan || session.plan || 'free';
+  const expires = sub?.expiresAt;
+
+  const planInfo = {
+    free:  { name: 'Free', desc: 'Базовый тариф', emoji: '🌱' },
+    start: { name: 'Start', desc: 'Для команд и фрилансеров', emoji: '🚀' },
+    pro:   { name: 'Pro', desc: 'Максимум возможностей', emoji: '💎' }
+  };
+
+  const info = planInfo[plan] || planInfo.free;
+  const badge = $('#planBadge');
+  badge.className = 'plan-badge ' + plan;
+  badge.textContent = info.emoji + ' ' + info.name.toUpperCase();
+
+  $('#planName').textContent = info.name;
+  $('#planDesc').textContent = info.desc;
+
+  if (expires) {
+    const days = Math.ceil((expires - Date.now()) / 86400000);
+    if (days < 0) {
+      $('#expiresInfo').innerHTML = `<strong style="color:#ff9b8a">Истёк</strong>${new Date(expires).toLocaleDateString('ru-RU')}`;
+    } else {
+      $('#expiresInfo').innerHTML = `<strong>Активна до</strong>${new Date(expires).toLocaleDateString('ru-RU')} (${days} дн.)`;
+    }
+  } else {
+    $('#expiresInfo').innerHTML = plan === 'free' ? '<strong>Бессрочно</strong>' : '<strong>Бессрочная подписка</strong>';
+  }
+}
+
+// Статистика
+function renderStats() {
+  const tickets = JSON.parse(localStorage.getItem('sink_tickets') || '[]');
+  const mine = tickets.filter(t => t.userId === session.id);
+  $('#statCalls').textContent = Math.floor(Math.random() * 40) + 5;
+  $('#statHours').textContent = Math.floor(Math.random() * 80) + 10;
+  $('#statTickets').textContent = mine.length;
+  $('#statActive').textContent = mine.filter(t => t.status !== 'closed').length;
+}
+
+// Мои тикеты (короткий список)
+function renderMyTickets() {
+  const container = $('#myTickets');
+  const list = JSON.parse(localStorage.getItem('sink_tickets') || '[]').filter(t => t.userId === session.id);
+
+  if (list.length === 0) {
+    container.innerHTML = `<div style="text-align:center;padding:30px;color:var(--muted);font-size:14px">
+      Пока нет обращений. Если что-то не так — <a href="support.html" style="color:var(--orange-light)">напишите нам</a>.
+    </div>`;
+    return;
+  }
+
+  const statusMap = { open: 'status-open', progress: 'status-progress', closed: 'status-closed' };
+  const statusLabel = { open: 'Открыт', progress: 'В работе', closed: 'Закрыт' };
+
+  container.innerHTML = list.slice(0, 5).map(t => `
+    <div style="padding:14px;border-radius:12px;background:rgba(0,0,0,.2);margin-bottom:8px;border:1px solid rgba(255,107,53,.1)">
+      <div style="display:flex;justify-content:space-between;gap:10px;margin-bottom:6px">
+        <strong>${escapeHtml(t.subject)}</strong>
+        <span class="status ${statusMap[t.status]}" style="padding:3px 9px;border-radius:6px;font-size:10px;font-weight:700;text-transform:uppercase">${statusLabel[t.status]}</span>
+      </div>
+      <div style="font-size:12px;color:var(--muted)">💬 ${t.messages.length} сообщений</div>
+    </div>
+  `).join('');
+}
+
+function logout(e) {
+  e.preventDefault();
+  if (!confirm('Выйти?')) return;
+  localStorage.removeItem('sink_session');
+  location.href = 'index.html';
+}
+
+function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+function toast(msg, type = 'info') {
+  const t = $('#toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type !== 'info' ? ' ' + type : '');
+  clearTimeout(window._tt);
+  window._tt = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+renderSubscription();
+renderStats();
+renderMyTickets();
+</script>
+</body>
+</html>

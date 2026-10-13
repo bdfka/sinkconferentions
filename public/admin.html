@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Админ-панель — SinkConferentions</title>
+<link rel="stylesheet" href="styles.css" />
+<style>
+.container{max-width:1300px;margin:0 auto;padding:32px 24px}
+
+.page-head{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  margin-bottom:28px;flex-wrap:wrap;gap:16px;
+}
+.page-head h1{
+  font-size:32px;font-weight:900;letter-spacing:-1px;
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+}
+.page-head p{color:var(--muted);font-size:14px;margin-top:6px}
+.admin-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 14px;border-radius:10px;
+  background:linear-gradient(135deg,#F5A623,#E05520);
+  color:#fff;font-size:11px;font-weight:800;
+  letter-spacing:1px;text-transform:uppercase;
+  box-shadow:0 6px 18px rgba(245,166,35,.4);
+}
+
+/* Статистика */
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:14px;margin-bottom:28px;
+}
+.stat-card{
+  background:var(--card);
+  border:1px solid rgba(255,107,53,.15);
+  border-radius:16px;padding:20px;
+  transition:all .3s;
+}
+.stat-card:hover{transform:translateY(-3px);border-color:rgba(255,107,53,.35)}
+.stat-label{
+  font-size:11px;color:var(--muted);
+  text-transform:uppercase;letter-spacing:1px;
+  font-weight:700;margin-bottom:8px;
+}
+.stat-value{
+  font-size:30px;font-weight:900;letter-spacing:-1px;
+  background:linear-gradient(135deg,var(--text),var(--orange-light));
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+/* Tabs */
+.admin-tabs{
+  display:flex;gap:6px;margin-bottom:24px;
+  background:rgba(0,0,0,.28);
+  padding:5px;border-radius:12px;
+  width:max-content;
+  flex-wrap:wrap;
+}
+.admin-tab{
+  padding:10px 18px;border:none;
+  background:transparent;color:var(--muted);
+  border-radius:9px;font-size:13px;font-weight:600;
+  font-family:inherit;cursor:pointer;transition:all .2s;
+}
+.admin-tab.active{
+  background:var(--orange);color:#fff;
+  box-shadow:0 6px 18px var(--glow);
+}
+.admin-pane{display:none;animation:fadeUp .3s ease}
+.admin-pane.active{display:block}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* Список пользователей */
+.users-table{
+  background:var(--card);
+  border:1px solid rgba(255,107,53,.15);
+  border-radius:16px;overflow:hidden;
+}
+.user-row{
+  display:grid;
+  grid-template-columns:60px 1.5fr 2fr 1.2fr 1fr 200px;
+  gap:14px;
+  align-items:center;
+  padding:16px 20px;
+  border-bottom:1px solid rgba(255,107,53,.08);
+  transition:background .2s;
+}
+.user-row:hover{background:rgba(255,107,53,.04)}
+.user-row:last-child{border-bottom:none}
+.user-row.head{
+  background:rgba(255,107,53,.08);
+  font-size:11px;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;
+  color:var(--orange-light);
+  padding:12px 20px;
+}
+
+.user-avatar{
+  width:44px;height:44px;border-radius:12px;
+  background:linear-gradient(135deg,var(--orange),var(--orange-light));
+  display:grid;place-items:center;
+  font-weight:800;font-size:16px;color:#fff;
+}
+.user-avatar.admin{
+  background:linear-gradient(135deg,#F5A623,#E05520);
+  box-shadow:0 4px 14px rgba(245,166,35,.4);
+}
+
+.user-cell{font-size:14px;min-width:0;overflow:hidden}
+.user-cell .name{font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-cell .sub{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.plan-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:5px 11px;border-radius:8px;
+  font-size:11px;font-weight:800;
+  letter-spacing:.5px;text-transform:uppercase;
+}
+.plan-badge.free{background:rgba(184,162,155,.2);color:var(--muted)}
+.plan-badge.start{background:linear-gradient(135deg,#F5A623,#E05520);color:#fff}
+.plan-badge.pro{background:linear-gradient(135deg,#A855F7,#7E22CE);color:#fff;box-shadow:0 4px 12px rgba(168,85,247,.35)}
+
+.expires{font-size:12px;color:var(--muted)}
+.expires.expired{color:#ff9b8a}
+
+.user-actions{display:flex;gap:6px;justify-content:flex-end}
+.user-actions button{
+  padding:7px 12px;border:none;border-radius:8px;
+  font-size:12px;font-weight:600;font-family:inherit;
+  cursor:pointer;transition:all .2s;
+}
+.btn-give{background:rgba(255,107,53,.15);color:var(--orange-light);border:1px solid rgba(255,107,53,.3) !important}
+.btn-give:hover{background:var(--orange);color:#fff}
+
+/* Модалка выдачи подписки */
+.sub-plan-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:10px;margin:14px 0;
+}
+.sub-plan{
+  padding:16px 12px;
+  background:rgba(0,0,0,.25);
+  border:2px solid rgba(255,107,53,.15);
+  border-radius:12px;
+  cursor:pointer;transition:all .2s;
+  text-align:center;
+}
+.sub-plan:hover{border-color:rgba(255,107,53,.5);transform:translateY(-2px)}
+.sub-plan.selected{
+  border-color:var(--orange);
+  background:rgba(255,107,53,.15);
+  box-shadow:0 6px 20px var(--glow);
+}
+.sub-plan .icon{font-size:26px;margin-bottom:6px}
+.sub-plan .name{font-size:15px;font-weight:800;margin-bottom:4px}
+.sub-plan .price{font-size:12px;color:var(--muted)}
+
+/* Выбор длительности */
+.duration-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:8px;margin-top:10px;
+}
+.duration{
+  padding:10px;background:rgba(0,0,0,.25);
+  border:2px solid rgba(255,107,53,.15);
+  border-radius:10px;cursor:pointer;
+  font-size:13px;font-weight:700;
+  text-align:center;transition:all .2s;
+}
+.duration:hover{border-color:rgba(255,107,53,.5)}
+.duration.selected{
+  border-color:var(--orange);
+  background:rgba(255,107,53,.15);
+  color:var(--orange-light);
+}
+
+/* Формы */
+.form-field{margin-bottom:14px}
+.form-field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:600}
+.form-field input,.form-field select{
+  width:100%;padding:12px 14px;
+  border-radius:10px;border:1px solid rgba(255,107,53,.2);
+  background:var(--bg2);color:var(--text);
+  font-family:inherit;font-size:14px;outline:none;
+  transition:border-color .2s;
+}
+.form-field input:focus,.form-field select:focus{border-color:var(--orange)}
+
+/* Пусто */
+.empty{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty .ico{font-size:44px;margin-bottom:12px;opacity:.4}
+
+@media (max-width:900px){
+  .user-row{grid-template-columns:50px 1fr 1fr;gap:10px;padding:14px}
+  .user-row.head{display:none}
+  .user-actions{grid-column:1/-1;justify-content:flex-start}
+  .sub-plan-grid{grid-template-columns:1fr}
+  .duration-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="brand">
+    <div class="brand-mark">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 10l4.55-2.27A1 1 0 0121 8.62v6.76a1 1 0 01-1.45.89L15 14"/>
+        <rect x="3" y="6" width="12" height="12" rx="2"/>
+      </svg>
+    </div>
+    Sink<span>Conferentions</span>
+  </a>
+  <div class="nav-right">
+    <a href="index.html">Главная</a>
+    <a href="support.html">Поддержка</a>
+    <a href="profile.html">Профиль</a>
+    <a href="#" onclick="logout(event)">Выйти</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="page-head">
+    <div>
+      <h1>
+        🛡️ Админ-панель
+        <span class="admin-badge">bdfka · Семён Иванов</span>
+      </h1>
+      <p>Управление пользователями, подписками и системой</p>
+    </div>
+  </div>
+
+  <!-- Статистика -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Пользователей</div>
+      <div class="stat-value" id="statUsers">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Подписок выдано</div>
+      <div class="stat-value" id="statSubs">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Pro пользователей</div>
+      <div class="stat-value" id="statPro">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Тикетов</div>
+      <div class="stat-value" id="statTickets">—</div>
+    </div>
+  </div>
+
+  <!-- Табы -->
+  <div class="admin-tabs">
+    <button class="admin-tab active" data-pane="users">👥 Пользователи</button>
+    <button class="admin-tab" data-pane="subs">💎 Подписки</button>
+    <button class="admin-tab" data-pane="tickets">🎫 Тикеты</button>
+    <button class="admin-tab" data-pane="settings">⚙️ Настройки</button>
+  </div>
+
+  <!-- Пользователи -->
+  <div class="admin-pane active" id="pane-users">
+    <div class="users-table">
+      <div class="user-row head">
+        <div></div>
+        <div>Пользователь</div>
+        <div>Email</div>
+        <div>Тариф</div>
+        <div>Истекает</div>
+        <div style="text-align:right">Действия</div>
+      </div>
+      <div id="usersList"></div>
+    </div>
+  </div>
+
+  <!-- Подписки -->
+  <div class="admin-pane" id="pane-subs">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+      <h2 style="font-size:20px;font-weight:800">Активные подписки</h2>
+      <button class="btn btn-primary" id="issueSubBtn" style="padding:10px 18px;font-size:13px">
+        + Выдать подписку
+      </button>
+    </div>
+    <div class="users-table">
+      <div class="user-row head">
+        <div></div>
+        <div>Пользователь</div>
+        <div>Тариф</div>
+        <div>Выдал</div>
+        <div>Истекает</div>
+        <div style="text-align:right">Действия</div>
+      </div>
+      <div id="subsList"></div>
+    </div>
+  </div>
+
+  <!-- Тикеты -->
+  <div class="admin-pane" id="pane-tickets">
+    <div id="ticketsList"></div>
+  </div>
+
+  <!-- Настройки -->
+  <div class="admin-pane" id="pane-settings">
+    <div class="stat-card" style="padding:28px;max-width:600px">
+      <h2 style="font-size:18px;font-weight:800;margin-bottom:16px">⚙️ Настройки системы</h2>
+      <div class="form-field">
+        <label>Мастер-ключ для API</label>
+        <input type="text" id="masterKey" placeholder="••••••••" />
+      </div>
+      <div class="form-field">
+        <label>Сервер (Render URL)</label>
+        <input type="text" id="serverUrl" placeholder="https://sinkconferentions.onrender.com" />
+      </div>
+      <button class="btn btn-primary" style="padding:12px 22px" onclick="saveSettings()">Сохранить</button>
+      <button class="btn btn-ghost" style="padding:12px 22px;margin-left:8px" onclick="location.href='/api/health'">Проверить сервер</button>
+    </div>
+  </div>
+</div>
+
+<!-- Модалка выдачи подписки -->
+<div class="modal" id="subModal">
+  <div class="modal-card" style="max-width:520px">
+    <h2>💎 Выдать подписку</h2>
+    <p class="sub">Выберите пользователя, тариф и длительность</p>
+
+    <div class="form-field">
+      <label>Пользователь</label>
+      <select id="subUserSelect"></select>
+    </div>
+
+    <label style="display:block;font-size:12px;color:var(--muted);margin:16px 0 6px;font-weight:600">Тариф</label>
+    <div class="sub-plan-grid">
+      <div class="sub-plan" data-plan="free">
+        <div class="icon">🌱</div>
+        <div class="name">Free</div>
+        <div class="price">0 ₽</div>
+      </div>
+      <div class="sub-plan selected" data-plan="start">
+        <div class="icon">🚀</div>
+        <div class="name">Start</div>
+        <div class="price">490 ₽/мес</div>
+      </div>
+      <div class="sub-plan" data-plan="pro">
+        <div class="icon">💎</div>
+        <div class="name">Pro</div>
+        <div class="price">1290 ₽/мес</div>
+      </div>
+    </div>
+
+    <label style="display:block;font-size:12px;color:var(--muted);margin:16px 0 6px;font-weight:600">Длительность</label>
+    <div class="duration-grid">
+      <div class="duration" data-days="7">7 дней</div>
+      <div class="duration selected" data-days="30">30 дней</div>
+      <div class="duration" data-days="90">90 дней</div>
+      <div class="duration" data-days="0">∞ бессрочно</div>
+    </div>
+
+    <div class="modal-actions" style="margin-top:24px">
+      <button class="btn btn-ghost" onclick="closeSubModal()">Отмена</button>
+      <button class="btn btn-primary" id="confirmSubBtn">Выдать подписку</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   SinkConferentions — Админ-панель bdfka
+   ============================================================ */
+
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => document.querySelectorAll(s);
+
+// ---------- Проверка админа ----------
+const session = (() => { try { return JSON.parse(localStorage.getItem('sink_session')); } catch { return null; } })();
+
+if (!session || !(session.login === 'bdfka' || session.isAdmin)) {
+  alert('Доступ только для администратора (bdfka)');
+  location.href = 'auth.html';
+}
+
+// ---------- Хранилища ----------
+const DB = {
+  USERS: 'sink_users',
+  SUBS: 'sink_subscriptions',
+  TICKETS: 'sink_tickets',
+  get(k, def = []) { try { return JSON.parse(localStorage.getItem(k)) || def; } catch { return def; } },
+  set(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+};
+
+// ---------- Утилиты ----------
+function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+function toast(msg, type = 'info') {
+  const t = $('#toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type !== 'info' ? ' ' + type : '');
+  clearTimeout(window._tt);
+  window._tt = setTimeout(() => t.classList.remove('show'), 2800);
+}
+function formatDate(ts) {
+  if (!ts) return '∞';
+  const d = new Date(ts);
+  return d.toLocaleDateString('ru-RU', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+function plural(n, o, f, m) {
+  const mod10 = n % 10, mod100 = n % 100;
+  if (mod100 >= 11 && mod100 <= 14) return m;
+  if (mod10 === 1) return o;
+  if (mod10 >= 2 && mod10 <= 4) return f;
+  return m;
+}
+
+// ---------- Рендер статистики ----------
+function renderStats() {
+  const users = DB.get(DB.USERS);
+  const subs = DB.get(DB.SUBS);
+  const tickets = DB.get(DB.TICKETS);
+
+  $('#statUsers').textContent = users.length;
+  $('#statSubs').textContent = subs.length;
+  $('#statPro').textContent = subs.filter(s => s.plan === 'pro').length;
+  $('#statTickets').textContent = tickets.length;
+}
+
+// ---------- Получить подписку пользователя ----------
+function getUserSub(userId) {
+  const subs = DB.get(DB.SUBS);
+  return subs.find(s => s.userId === userId);
+}
+
+// ---------- Рендер пользователей ----------
+function renderUsers() {
+  const users = DB.get(DB.USERS);
+  const container = $('#usersList');
+
+  if (users.length === 0) {
+    container.innerHTML = `<div class="empty"><div class="ico">👥</div><h3>Пользователей нет</h3></div>`;
+    return;
+  }
+
+  container.innerHTML = users.map(u => {
+    const sub = getUserSub(u.id);
+    const plan = sub?.plan || u.plan || 'free';
+    const expires = sub?.expiresAt;
+    const expired = expires && expires < Date.now();
+    const planClass = expired ? 'free' : plan;
+
+    return `
+      <div class="user-row" data-user-id="${u.id}">
+        <div class="user-avatar ${u.isAdmin ? 'admin' : ''}">${u.avatar || u.name[0].toUpperCase()}</div>
+        <div class="user-cell">
+          <div class="name">${escapeHtml(u.name)} ${u.isAdmin ? '🛡️' : ''}</div>
+          <div class="sub">@${escapeHtml(u.login)}</div>
+        </div>
+        <div class="user-cell">
+          <div class="sub">${escapeHtml(u.email)}</div>
+          <div class="sub" style="font-size:11px">С ${formatDate(new Date(u.createdAt).getTime())}</div>
+        </div>
+        <div><span class="plan-badge ${planClass}">${planClass.toUpperCase()}</span></div>
+        <div class="expires ${expired ? 'expired' : ''}">
+          ${expires ? formatDate(expires) : (sub ? '∞' : '—')}
+        </div>
+        <div class="user-actions">
+          <button class="btn-give" onclick="openSubModal('${u.id}')">💎 Выдать</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ---------- Рендер подписок ----------
+function renderSubs() {
+  const subs = DB.get(DB.SUBS);
+  const users = DB.get(DB.USERS);
+  const container = $('#subsList');
+
+  if (subs.length === 0) {
+    container.innerHTML = `<div class="empty"><div class="ico">💎</div><h3>Подписок нет</h3><p style="font-size:13px;margin-top:8px">Выдайте первую через кнопку выше</p></div>`;
+    return;
+  }
+
+  container.innerHTML = subs.map(s => {
+    const u = users.find(x => x.id === s.userId);
+    const expired = s.expiresAt && s.expiresAt < Date.now();
+    const planClass = expired ? 'free' : s.plan;
+
+    return `
+      <div class="user-row">
+        <div class="user-avatar ${u?.isAdmin ? 'admin' : ''}">${u?.avatar || '?'}</div>
+        <div class="user-cell">
+          <div class="name">${u ? escapeHtml(u.name) : 'Неизвестный'}</div>
+          <div class="sub">${u ? '@' + escapeHtml(u.login) : s.userId}</div>
+        </div>
+        <div><span class="plan-badge ${planClass}">${planClass.toUpperCase()}</span></div>
+        <div class="user-cell"><div class="sub">${escapeHtml(s.issuedBy || 'bdfka')}</div></div>
+        <div class="expires ${expired ? 'expired' : ''}">
+          ${s.expiresAt ? formatDate(s.expiresAt) : '∞ бессрочно'}
+        </div>
+        <div class="user-actions">
+          <button class="btn-give" onclick="openSubModal('${s.userId}')">✏️ Изменить</button>
+          <button class="btn-give" style="background:rgba(231,76,60,.15);color:#ff9b8a;border-color:rgba(231,76,60,.3) !important" onclick="revokeSub('${s.userId}')">🗑️</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ---------- Рендер тикетов ----------
+function renderTickets() {
+  const tickets = DB.get(DB.TICKETS);
+  const container = $('#ticketsList');
+
+  if (tickets.length === 0) {
+    container.innerHTML = `<div class="empty"><div class="ico">🎫</div><h3>Обращений нет</h3></div>`;
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="users-table">
+      <div class="user-row head">
+        <div></div>
+        <div>Тема</div>
+        <div>Пользователь</div>
+        <div>Статус</div>
+        <div>Создан</div>
+        <div style="text-align:right">Действия</div>
+      </div>
+      ${tickets.map(t => {
+        const statusMap = { open: 'открыт', progress: 'в работе', closed: 'закрыт' };
+        const statusClass = { open: 'start', progress: 'start', closed: 'free' };
+        return `
+          <div class="user-row">
+            <div style="font-size:22px">🎫</div>
+            <div class="user-cell">
+              <div class="name">${escapeHtml(t.subject)}</div>
+              <div class="sub">${t.id}</div>
+            </div>
+            <div class="user-cell">
+              <div class="sub">${escapeHtml(t.userName)}</div>
+            </div>
+            <div><span class="plan-badge ${statusClass[t.status]}">${statusMap[t.status] || t.status}</span></div>
+            <div class="expires">${formatDate(new Date(t.createdAt).getTime())}</div>
+            <div class="user-actions">
+              <button class="btn-give" onclick="location.href='support.html'">Открыть</button>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
+// ---------- Табы ----------
+$$('.admin-tab').forEach(tab => {
+  tab.onclick = () => {
+    $$('.admin-tab').forEach(t => t.classList.remove('active'));
+    $$('.admin-pane').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    $('#pane-' + tab.dataset.pane).classList.add('active');
+  };
+});
+
+// ---------- Модалка выдачи подписки ----------
+let selectedPlan = 'start';
+let selectedDays = 30;
+
+function openSubModal(userId = null) {
+  const users = DB.get(DB.USERS);
+  const select = $('#subUserSelect');
+  select.innerHTML = users.map(u => `
+    <option value="${u.id}" ${u.id === userId ? 'selected' : ''}>
+      ${escapeHtml(u.name)} (@${escapeHtml(u.login)})${u.isAdmin ? ' 🛡️' : ''}
+    </option>
+  `).join('');
+
+  if (userId) {
+    const sub = getUserSub(userId);
+    if (sub) {
+      selectedPlan = sub.plan;
+      if (sub.expiresAt) {
+        const days = Math.round((sub.expiresAt - Date.now()) / 86400000);
+        selectedDays = [7, 30, 90, 0].includes(days) ? days : 30;
+      }
+    }
+  }
+
+  updateSubPlanUI();
+  updateDurationUI();
+  $('#subModal').classList.add('show');
+}
+
+function closeSubModal() {
+  $('#subModal').classList.remove('show');
+}
+
+$$('.sub-plan').forEach(el => {
+  el.onclick = () => {
+    selectedPlan = el.dataset.plan;
+    updateSubPlanUI();
+  };
+});
+
+function updateSubPlanUI() {
+  $$('.sub-plan').forEach(el => {
+    el.classList.toggle('selected', el.dataset.plan === selectedPlan);
+  });
+}
+
+$$('.duration').forEach(el => {
+  el.onclick = () => {
+    selectedDays = +el.dataset.days;
+    updateDurationUI();
+  };
+});
+
+function updateDurationUI() {
+  $$('.duration').forEach(el => {
+    el.classList.toggle('selected', +el.dataset.days === selectedDays);
+  });
+}
+
+$('#issueSubBtn').onclick = () => openSubModal();
+
+$('#confirmSubBtn').onclick = () => {
+  const userId = $('#subUserSelect').value;
+  if (!userId) return toast('Выберите пользователя', 'error');
+
+  const users = DB.get(DB.USERS);
+  const user = users.find(u => u.id === userId);
+  if (!user) return toast('Пользователь не найден', 'error');
+
+  const subs = DB.get(DB.SUBS);
+  const idx = subs.findIndex(s => s.userId === userId);
+
+  const sub = {
+    userId,
+    plan: selectedPlan,
+    expiresAt: selectedDays === 0 ? null : Date.now() + selectedDays * 86400000,
+    issuedBy: session.name || 'bdfka',
+    issuedByLogin: session.login || 'bdfka',
+    issuedAt: Date.now()
+  };
+
+  if (idx >= 0) subs[idx] = sub;
+  else subs.push(sub);
+  DB.set(DB.SUBS, subs);
+
+  // Обновляем план в пользователе
+  const userIdx = users.findIndex(u => u.id === userId);
+  if (userIdx >= 0) {
+    users[userIdx].plan = selectedPlan;
+    DB.set(DB.USERS, users);
+  }
+
+  // Обновляем сессию если это мы
+  if (userId === session.id) {
+    session.plan = selectedPlan;
+    localStorage.setItem('sink_session', JSON.stringify(session));
+  }
+
+  closeSubModal();
+  renderStats();
+  renderUsers();
+  renderSubs();
+
+  toast(`✅ Подписка ${selectedPlan.toUpperCase()} выдана ${user.name}`, 'success');
+};
+
+function revokeSub(userId) {
+  if (!confirm('Отозвать подписку? Пользователь вернётся на Free.')) return;
+
+  const subs = DB.get(DB.SUBS).filter(s => s.userId !== userId);
+  DB.set(DB.SUBS, subs);
+
+  const users = DB.get(DB.USERS);
+  const idx = users.findIndex(u => u.id === userId);
+  if (idx >= 0) {
+    users[idx].plan = 'free';
+    DB.set(DB.USERS, users);
+  }
+
+  renderStats();
+  renderUsers();
+  renderSubs();
+  toast('Подписка отозвана');
+}
+
+// ---------- Настройки ----------
+function loadSettings() {
+  $('#masterKey').value = localStorage.getItem('sink_master_key') || '';
+  $('#serverUrl').value = localStorage.getItem('sink_server_url') || location.origin;
+}
+
+function saveSettings() {
+  localStorage.setItem('sink_master_key', $('#masterKey').value);
+  localStorage.setItem('sink_server_url', $('#serverUrl').value);
+  toast('Настройки сохранены', 'success');
+}
+
+// ---------- Выход ----------
+function logout(e) {
+  e.preventDefault();
+  if (!confirm('Выйти из аккаунта?')) return;
+  localStorage.removeItem('sink_session');
+  location.href = 'index.html';
+}
+
+// ---------- Инициализация ----------
+renderStats();
+renderUsers();
+renderSubs();
+renderTickets();
+loadSettings();
+
+// Автообновление раз в 5 секунд
+setInterval(() => {
+  renderStats();
+  renderUsers();
+  renderSubs();
+}, 5000);
+</script>
+</body>
+</html>

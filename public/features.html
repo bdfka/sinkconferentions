@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Возможности — SinkConferentions</title>
+<style>
+  :root{
+    --orange:#FF6B35;--orange-dark:#E05520;--orange-light:#FF8C5A;
+    --bg:#140D0B;--bg2:#1F1512;--card:#2A1C18;
+    --text:#FFF5F0;--muted:#B8A29B;--glow:rgba(255,107,53,.45);
+    --green:#22C55E;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    background:var(--bg);color:var(--text);min-height:100vh;
+    overflow-x:hidden;
+  }
+  body::before{
+    content:'';position:fixed;inset:-20%;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(255,107,53,.15), transparent 45%),
+      radial-gradient(circle at 85% 80%, rgba(255,140,90,.12), transparent 50%);
+    z-index:-1;
+    animation:bgFloat 20s ease-in-out infinite alternate;
+  }
+  @keyframes bgFloat{
+    0%{transform:translate(0,0)}
+    100%{transform:translate(3%,-2%)}
+  }
+
+  .navbar{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:20px 40px;
+    background:rgba(20,13,11,.85);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(255,107,53,.12);
+    position:sticky;top:0;z-index:50;
+  }
+  .brand{
+    display:flex;align-items:center;gap:10px;
+    font-weight:800;font-size:18px;text-decoration:none;color:var(--text);
+  }
+  .brand-mark{
+    width:32px;height:32px;border-radius:9px;
+    background:linear-gradient(135deg,var(--orange),var(--orange-light));
+    display:grid;place-items:center;
+    box-shadow:0 6px 18px var(--glow);
+  }
+  .brand span{
+    background:linear-gradient(135deg,var(--orange),var(--orange-light));
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  }
+  .nav-right{display:flex;gap:16px;align-items:center;font-size:14px}
+  .nav-right a{color:var(--muted);text-decoration:none;transition:color .2s}
+  .nav-right a:hover{color:var(--orange-light)}
+
+  .hero{
+    text-align:center;
+    padding:80px 24px 60px;
+    max-width:900px;
+    margin:0 auto;
+  }
+  .hero-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:8px 16px;
+    background:rgba(255,107,53,.12);
+    border:1px solid rgba(255,107,53,.3);
+    border-radius:999px;
+    font-size:13px;color:var(--orange-light);
+    margin-bottom:24px;
+  }
+  .hero h1{
+    font-size:clamp(36px,6vw,64px);
+    font-weight:900;
+    letter-spacing:-2px;
+    line-height:1.1;
+    margin-bottom:20px;
+    background:linear-gradient(135deg,var(--text) 40%,var(--orange-light));
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+  .hero p{
+    color:var(--muted);font-size:18px;
+    line-height:1.6;max-width:600px;margin:0 auto;
+  }
+
+  .section{
+    max-width:1200px;
+    margin:0 auto;
+    padding:40px 24px 80px;
+  }
+  .section-title{
+    font-size:32px;font-weight:800;
+    letter-spacing:-1px;
+    margin-bottom:12px;
+    text-align:center;
+  }
+  .section-sub{
+    text-align:center;
+    color:var(--muted);
+    font-size:16px;
+    margin-bottom:50px;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:22px;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid rgba(255,107,53,.15);
+    border-radius:20px;
+    padding:28px;
+    transition:all .35s cubic-bezier(.34,1.56,.64,1);
+    animation:fadeUp .6s ease backwards;
+    position:relative;
+    overflow:hidden;
+  }
+  @keyframes fadeUp{
+    from{opacity:0;transform:translateY(24px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+  .card:hover{
+    transform:translateY(-6px);
+    border-color:rgba(255,107,53,.4);
+    box-shadow:0 20px 50px rgba(0,0,0,.4);
+  }
+  .card::before{
+    content:'';
+    position:absolute;
+    top:0;left:-100%;
+    width:100%;height:100%;
+    background:linear-gradient(90deg,transparent,rgba(255,107,53,.06),transparent);
+    transition:left .8s;
+  }
+  .card:hover::before{left:100%}
+
+  .card-icon{
+    width:56px;height:56px;
+    border-radius:16px;
+    display:grid;place-items:center;
+    font-size:28px;
+    margin-bottom:20px;
+    background:linear-gradient(135deg,rgba(255,107,53,.2),rgba(255,107,53,.05));
+    border:1px solid rgba(255,107,53,.25);
+    position:relative;
+    z-index:1;
+  }
+  .card h3{
+    font-size:19px;font-weight:800;
+    margin-bottom:10px;
+    letter-spacing:-.3px;
+    position:relative;z-index:1;
+  }
+  .card p{
+    font-size:14px;color:var(--muted);
+    line-height:1.6;
+    position:relative;z-index:1;
+  }
+  .card .tags{
+    display:flex;gap:6px;flex-wrap:wrap;
+    margin-top:16px;
+    position:relative;z-index:1;
+  }
+  .tag{
+    font-size:11px;
+    padding:4px 10px;
+    border-radius:6px;
+    background:rgba(255,107,53,.15);
+    color:var(--orange-light);
+    font-weight:600;
+  }
+  .tag.pro{background:rgba(168,85,247,.15);color:#d8b4fe}
+  .tag.start{background:rgba(245,166,35,.15);color:#ffcf7d}
+  .tag.free{background:rgba(184,162,155,.15);color:var(--muted)}
+
+  /* Большая фича-витрина */
+  .showcase{
+    max-width:1200px;
+    margin:0 auto 80px;
+    padding:0 24px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:50px;
+    align-items:center;
+  }
+  .showcase.reverse{direction:rtl}
+  .showcase.reverse > *{direction:ltr}
+  .showcase-text h2{
+    font-size:34px;font-weight:900;
+    letter-spacing:-1px;
+    margin-bottom:16px;
+    line-height:1.15;
+  }
+  .showcase-text h2 .hl{
+    background:linear-gradient(135deg,var(--orange),var(--orange-light));
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+  .showcase-text p{
+    color:var(--muted);
+    font-size:16px;
+    line-height:1.7;
+    margin-bottom:20px;
+  }
+  .showcase-text ul{
+    list-style:none;
+    display:flex;flex-direction:column;gap:12px;
+  }
+  .showcase-text li{
+    display:flex;align-items:flex-start;gap:10px;
+    font-size:14px;line-height:1.5;
+  }
+  .check{
+    flex-shrink:0;
+    width:22px;height:22px;
+    border-radius:50%;
+    background:rgba(34,197,94,.2);
+    color:var(--green);
+    display:grid;place-items:center;
+    font-size:11px;font-weight:700;
+    margin-top:1px;
+  }
+
+  .visual{
+    position:relative;
+    aspect-ratio:4/3;
+    border-radius:24px;
+    background:linear-gradient(135deg,var(--bg2),var(--card));
+    border:1px solid rgba(255,107,53,.2);
+    overflow:hidden;
+    display:grid;place-items:center;
+    box-shadow:0 30px 70px rgba(0,0,0,.5);
+  }
+  .visual::after{
+    content:'';
+    position:absolute;inset:0;
+    background:
+      radial-gradient(circle at 30% 30%, rgba(255,107,53,.25), transparent 45%),
+      radial-gradient(circle at 70% 70%, rgba(255,140,90,.15), transparent 50%);
+    pointer-events:none;
+  }
+  .visual .mockup{
+    position:relative;
+    z-index:1;
+    width:80%;
+    aspect-ratio:16/9;
+    border-radius:14px;
+    background:rgba(0,0,0,.4);
+    border:1px solid rgba(255,107,53,.3);
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:6px;
+    padding:10px;
+  }
+  .visual .mockup .cell{
+    border-radius:8px;
+    background:linear-gradient(135deg,rgba(255,107,53,.25),rgba(224,85,32,.15));
+    position:relative;
+  }
+  .visual .mockup .cell::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:radial-gradient(circle at 40% 40%,rgba(255,255,255,.15),transparent 60%);
+  }
+
+  /* CTA */
+  .cta-section{
+    max-width:900px;
+    margin:80px auto;
+    padding:60px 40px;
+    text-align:center;
+    background:linear-gradient(135deg,rgba(255,107,53,.1),rgba(224,85,32,.06));
+    border:1px solid rgba(255,107,53,.25);
+    border-radius:28px;
+    position:relative;
+    overflow:hidden;
+  }
+  .cta-section::before{
+    content:'';
+    position:absolute;
+    top:-50%;left:-50%;
+    width:200%;height:200%;
+    background:conic-gradient(from 0deg, transparent, rgba(255,107,53,.15), transparent 30%);
+    animation:rotate 8s linear infinite;
+    z-index:0;
+  }
+  @keyframes rotate{
+    to{transform:rotate(360deg)}
+  }
+  .cta-section > *{position:relative;z-index:1}
+  .cta-section h2{
+    font-size:36px;font-weight:900;
+    letter-spacing:-1px;
+    margin-bottom:16px;
+  }
+  .cta-section p{
+    color:var(--muted);
+    font-size:17px;
+    margin-bottom:32px;
+  }
+  .cta-buttons{
+    display:flex;gap:12px;justify-content:center;
+    flex-wrap:wrap;
+  }
+  .cta-btn{
+    padding:15px 28px;
+    border-radius:14px;
+    border:none;
+    font-size:15px;
+    font-weight:700;
+    font-family:inherit;
+    cursor:pointer;
+    transition:all .25s;
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+  }
+  .cta-btn.primary{
+    background:linear-gradient(135deg,var(--orange),var(--orange-dark));
+    color:#fff;
+    box-shadow:0 10px 28px var(--glow);
+  }
+  .cta-btn.primary:hover{transform:translateY(-3px);box-shadow:0 16px 36px var(--glow)}
+  .cta-btn.ghost{
+    background:rgba(255,255,255,.05);
+    color:var(--text);
+    border:1px solid rgba(255,107,53,.3);
+  }
+  .cta-btn.ghost:hover{background:rgba(255,107,53,.15);transform:translateY(-3px)}
+
+  @media (max-width:900px){
+    .navbar{padding:14px 20px}
+    .nav-right a{display:none}
+    .showcase{grid-template-columns:1fr;gap:30px}
+    .showcase.reverse{direction:ltr}
+  }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="brand">
+    <div class="brand-mark">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 10l4.55-2.27A1 1 0 0121 8.62v6.76a1 1 0 01-1.45.89L15 14"/>
+        <rect x="3" y="6" width="12" height="12" rx="2"/>
+      </svg>
+    </div>
+    Sink<span>Conferentions</span>
+  </a>
+  <div class="nav-right">
+    <a href="index.html">Главная</a>
+    <a href="features.html" style="color:var(--orange-light)">Возможности</a>
+    <a href="pricing.html">Тарифы</a>
+    <a href="support.html">Поддержка</a>
+    <a href="auth.html" style="background:var(--orange);padding:8px 16px;border-radius:10px;font-size:13px;font-weight:700;box-shadow:0 6px 18px var(--glow);color:#fff">
+      Войти
+    </a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">
+    <span style="width:6px;height:6px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px #4ade80"></span>
+    Всё для продуктивных звонков
+  </div>
+  <h1>Возможности, которые<br>меняют встречи</h1>
+  <p>Каждая функция создана для реальной работы: без лишнего, с любовью к деталям и скоростью.</p>
+</section>
+
+<!-- ============ ВИТРИНА 1: Видео ============ -->
+<section class="showcase">
+  <div class="showcase-text">
+    <h2>HD-видео <span class="hl">без задержек</span></h2>
+    <p>
+      Peer-to-peer соединение через WebRTC: минимальная задержка, максимальное качество.
+      Работает в любом браузере без плагинов.
+    </p>
+    <ul>
+      <li><span class="check">✓</span> До 4K и 60 fps на Pro</li>
+      <li><span class="check">✓</span> Адаптивный битрейт под ваш интернет</li>
+      <li><span class="check">✓</span> Шумоподавление и эхоподавление</li>
+      <li><span class="check">✓</span> Автоматический выбор активного спикера</li>
+      <li><span class="check">✓</span> Работает в Chrome, Safari, Firefox, Edge</li>
+    </ul>
+  </div>
+  <div class="visual">
+    <div class="mockup">
+      <div class="cell"></div><div class="cell"></div>
+      <div class="cell"></div><div class="cell"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ВИТРИНА 2: Доска ============ -->
+<section class="showcase reverse">
+  <div class="showcase-text">
+    <h2>Доска для <span class="hl">живого рисования</span></h2>
+    <p>
+      Идеально для уроков, презентаций и мозговых штурмов. Рисуйте вместе в реальном времени.
+    </p>
+    <ul>
+      <li><span class="check">✓</span> Карандаш, ластик, панорама, зум</li>
+      <li><span class="check">✓</span> Неограниченная палитра и толщина</li>
+      <li><span class="check">✓</span> Рисование поверх демонстрации экрана</li>
+      <li><span class="check">✓</span> Экспорт в PNG одним кликом</li>
+      <li><span class="check">✓</span> Админ управляет показом для всех</li>
+    </ul>
+  </div>
+  <div class="visual">
+    <div class="mockup" style="grid-template-columns:1fr">
+      <div class="cell" style="background:linear-gradient(135deg,rgba(255,107,53,.1),rgba(0,0,0,.3));position:relative">
+        <svg viewBox="0 0 200 100" style="position:absolute;inset:0;width:100%;height:100%">
+          <path d="M20 70 Q 60 20 100 50 T 180 40" fill="none" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="40" cy="30" r="6" fill="none" stroke="#FF8C5A" stroke-width="2"/>
+          <path d="M120 70 L 140 55 L 160 70 L 140 85 Z" fill="none" stroke="#FF6B35" stroke-width="2"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ВИТРИНА 3: Чат ============ -->
+<section class="showcase">
+  <div class="showcase-text">
+    <h2>Чат, который <span class="hl">реально работает</span></h2>
+    <p>
+      Общий чат, личные сообщения, фото, опросы — всё внутри звонка, без переключения вкладок.
+    </p>
+    <ul>
+      <li><span class="check">✓</span> Общий чат для всех участников</li>
+      <li><span class="check">✓</span> Личные сообщения в один клик</li>
+      <li><span class="check">✓</span> Отправка изображений с превью</li>
+      <li><span class="check">✓</span> Опросы с живой статистикой</li>
+      <li><span class="check">✓</span> Индикатор «печатает…» и непрочитанные</li>
+    </ul>
+  </div>
+  <div class="visual">
+    <div class="mockup" style="grid-template-columns:1fr;gap:8px;padding:16px">
+      <div class="cell" style="aspect-ratio:auto;height:36px;display:flex;align-items:center;padding:0 12px;font-size:12px;color:var(--orange-light)">💬 Мария: Привет всем!</div>
+      <div class="cell" style="aspect-ratio:auto;height:36px;display:flex;align-items:center;padding:0 12px;font-size:12px;color:var(--text);margin-left:auto;width:70%">👍 Отлично!</div>
+      <div class="cell" style="aspect-ratio:auto;height:60px;display:flex;align-items:center;padding:0 12px;font-size:12px;color:var(--text)">📊 Опрос: Какой день удобнее? 62%</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ВСЕ ВОЗМОЖНОСТИ СЕТКОЙ ============ -->
+<section class="section">
+  <h2 class="section-title">Всё, что умеет Sink</h2>
+  <p class="section-sub">Полный список возможностей по категориям</p>
+
+  <div class="grid">
+    <div class="card" style="animation-delay:.05s">
+      <div class="card-icon">🎥</div>
+      <h3>Видеоконференции</h3>
+      <p>Сетка видео до 200 участников с адаптивной раскладкой, активным спикером и стабильным P2P-соединением.</p>
+      <div class="tags"><span class="tag free">Free</span><span class="tag start">Start</span><span class="tag pro">Pro</span></div>
+    </div>
+
+    <div class="card" style="animation-delay:.1s">
+      <div class="card-icon">🖥️</div>
+      <h3>Демонстрация экрана</h3>
+      <p>Показывайте весь экран, окно или вкладку. Рисуйте поверх, выделяйте важное курсором.</p>
+      <div class="tags"><span class="tag free">Free</span><span class="tag start">Start</span><span class="tag pro">Pro ×4</span></div>
+    </div>
+
+    <div class="card" style="animation-delay:.15s">
+      <div class="card-icon">✏️</div>
+      <h3>Интерактивная доска</h3>
+      <p>Карандаш, ластик, панорама, зум, цвет и толщина. Рисуйте вместе или наблюдайте. Экспорт в PNG.</p>
+      <div class="tags"><span class="tag free">Free</span><span class="tag start">Start</span><span class="tag pro">Pro + экспорт</span></div>
+    </div>
+
+    <div class="card" style="animation-delay:.2s">
+      <div class="card-icon">💬</div>
+      <h3>Чат и сообщения</h3>
+      <p>Общий чат, личные сообщения участникам, отправка фото, индикатор набора, история сообщений.</p>
+      <div class="tags"><span class="tag start">Start</span><span class="tag pro">Pro</span></div>
+    </div>
+
+    <div class="card" style="animation-delay:.25s">
+      <div class="card-icon">📊</div>
+      <h3>Опросы и голосования</h3>
+      <p>Создавайте опросы с вариантами, наблюдайте статистику в реальном времени, экспортируйте результаты.</p>
+      <div class="tags"><span class="tag start">Start</span><span class="tag pro">Pro + экспорт</span></div>
+    </div>
+
+    <div class="card" style="animation-delay:.3s">
+      <div class="card-icon">✋</div>
+      <h3>Поднятие рук</h3>
+      <p>Тихий способ попросить слово. Ведущий видит очередь и управляет микрофонами.</p>
+      <div class="tags"><span class="tag start">Start</span><span class="tag pro">Pro</span></div>
+    </div>
+
+    <div class="card" style="animation-delay:.35s">
+      <div class="card-icon">😀</div>
+      <h3>Реакции эмодзи</h3>
+      <p>Всплывающие эмодзи без прерывания выступления. Идеально для вебинаров и стримов.</p>
+      <div class="tags"><span class="tag start">Start</span><span class="tag pro">Pro</span></div>
+    </div>
+
+    <div class="card" style="animation-delay:.4s">
+      <div class="card-icon">🔴</div>
+      <h3>Запись звонков</h3>
+      <p>Записывайте видео, аудио и демонстрацию экрана. Автозагрузка в облако, экспорт в MP4.</p>
+      <div class="tags"><span class="tag start">Start 10 ч/мес</span><span class="tag pro">Pro ∞</span></div>
+    </div>
+
+    <div class="card" style="animation-delay:.45s">
+      <div class="card-icon">🛡️</div>
+      <h3>Админ-панель</h3>
+      <p>Управляйте участниками: выключайте микрофоны, опускайте руки, управляйте доской и чатом.</p>
+      <div class="tags"><span class="tag pro">Pro</span></div>
+    </div>
+
+    <div class="card" style="animation-delay:.5s">
+      <div class="card-icon">🔒</div>
+      <h3>Приватность</h3>
+      <p>Сквозное шифрование WebRTC (DTLS-SRTP). Мы не храним видео и аудио. Пароли по SHA-256.</p>
+      <div class="tags"><span class="tag free">Free</span><span class="tag start">Start</span><span class="tag pro">Pro</span></div>
+    </div>
+
+    <div class="card" style="animation-delay:.55s">
+      <div class="card-icon">💻</div>
+      <h3>Десктоп-приложение</h3>
+      <p>Работает на Windows, macOS и Linux через нативный WebView. Системные уведомления, трей.</p>
+      <div class="tags"><span class="tag free">Free</span><span class="tag start">Start</span><span class="tag pro">Pro</span></div>
+    </div>
+
+    <div class="card" style="animation-delay:.6s">
+      <div class="card-icon">🔗</div>
+      <h3>Ссылки-приглашения</h3>
+      <p>Одна ссылка — и человек в звонке. Без регистрации, без установки, без лишних шагов.</p>
+      <div class="tags"><span class="tag free">Free</span><span class="tag start">Start</span><span class="tag pro">Pro</span></div>
+    </div>
+
+    <div class="card" style="animation-delay:.65s">
+      <div class="card-icon">🎫</div>
+      <h3>Техподдержка</h3>
+      <p>Реальная система тикетов с историей, статусами и приоритетами. Отвечаем быстро, решаем по существу.</p>
+      <div class="tags"><span class="tag free">Free 24ч</span><span class="tag start">Start 4ч</span><span class="tag pro">Pro 30мин</span></div>
+    </div>
+
+    <div class="card" style="animation-delay:.7s">
+      <div class="card-icon">🌐</div>
+      <h3>API и вебхуки</h3>
+      <p>Управляйте конференциями программно. Создавайте комнаты, приглашайте участников, получайте события.</p>
+      <div class="tags"><span class="tag pro">Pro</span></div>
+    </div>
+
+    <div class="card" style="animation-delay:.75s">
+      <div class="card-icon">🎨</div>
+      <h3>Брендирование</h3>
+      <p>Своё лого, цвета, домен. Ваши звонки — ваша айдентика. Для компаний и образовательных платформ.</p>
+      <div class="tags"><span class="tag pro">Pro</span></div>
+    </div>
+
+    <div class="card" style="animation-delay:.8s">
+      <div class="card-icon">⚡</div>
+      <h3>Лёгкость и скорость</h3>
+      <p>Работает на слабых устройствах. Никаких плагинов — всё в браузере. Мобильная адаптация.</p>
+      <div class="tags"><span class="tag free">Free</span><span class="tag start">Start</span><span class="tag pro">Pro</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="cta-section">
+  <h2>Готовы попробовать?</h2>
+  <p>Создайте первую конференцию за 5 секунд. Аккаунт не нужен.</p>
+  <div class="cta-buttons">
+    <a href="index.html" class="cta-btn primary">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <path d="M12 5v14M5 12h14"/>
+      </svg>
+      Новая конференция
+    </a>
+    <a href="pricing.html" class="cta-btn ghost">
+      Посмотреть тарифы →
+    </a>
+  </div>
+</section>
+
+</body>
+</html>
