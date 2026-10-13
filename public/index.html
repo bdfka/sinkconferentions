@@ -1,48 +1,725 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SinkConferentions — Видеозвонки нового поколения</title>
+<link rel="stylesheet" href="styles.css" />
+<style>
+/* ============ ГЛАВНАЯ ============ */
+.hero{
+  text-align:center;
+  padding:80px 24px 60px;
+  max-width:960px;
+  margin:0 auto;
+  position:relative;
+}
+
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 16px;
+  background:rgba(255,107,53,.12);
+  border:1px solid rgba(255,107,53,.3);
+  border-radius:999px;
+  font-size:13px;color:var(--orange-light);
+  margin-bottom:28px;
+  animation:fadeUp .6s ease;
+}
+.hero-badge .dot{
+  width:6px;height:6px;border-radius:50%;
+  background:#4ade80;
+  box-shadow:0 0 8px #4ade80;
+  animation:pulse 2s infinite;
+}
+.hero-badge.offline .dot{
+  background:var(--red);
+  box-shadow:0 0 8px var(--red);
+}
+@keyframes pulse{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:.5;transform:scale(1.3)}
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.hero h1{
+  font-size:clamp(40px,7vw,72px);
+  font-weight:900;
+  line-height:1.05;
+  letter-spacing:-2px;
+  margin-bottom:20px;
+  animation:fadeUp .7s ease .1s backwards;
+}
+.hero h1 .grad{
+  background:linear-gradient(135deg,var(--orange),var(--orange-light));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  position:relative;display:inline-block;
+}
+.hero h1 .grad::after{
+  content:'';position:absolute;
+  left:0;right:0;bottom:-6px;height:3px;
+  background:linear-gradient(90deg,transparent,var(--orange),transparent);
+  animation:underline 2.5s ease-in-out infinite;
+  border-radius:2px;
+}
+@keyframes underline{
+  0%,100%{transform:scaleX(.4);opacity:.6}
+  50%{transform:scaleX(1);opacity:1}
+}
+
+.hero p.lead{
+  font-size:17px;
+  color:var(--muted);
+  max-width:560px;
+  margin:0 auto 44px;
+  line-height:1.65;
+  animation:fadeUp .7s ease .2s backwards;
+}
+
+.cta-row{
+  display:flex;gap:14px;flex-wrap:wrap;
+  justify-content:center;margin-bottom:56px;
+  animation:fadeUp .7s ease .3s backwards;
+}
+
+.btn{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:16px 28px;
+  border-radius:14px;border:none;
+  font-size:15px;font-weight:600;
+  font-family:inherit;
+  cursor:pointer;
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1),box-shadow .25s;
+  position:relative;overflow:hidden;
+  text-decoration:none;
+}
+.btn:active{transform:scale(.97)}
+.btn-primary{
+  background:linear-gradient(135deg,var(--orange),var(--orange-dark));
+  color:#fff;
+  box-shadow:0 10px 30px var(--glow);
+}
+.btn-primary:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 16px 40px var(--glow)}
+.btn-primary:disabled{opacity:.6;cursor:wait;transform:none}
+.btn-ghost{
+  background:rgba(255,255,255,.04);
+  color:var(--text);
+  border:1px solid rgba(255,107,53,.25);
+}
+.btn-ghost:hover{
+  background:rgba(255,107,53,.12);
+  border-color:var(--orange);
+  transform:translateY(-3px);
+}
+
+/* Форма входа */
+.join-card{
+  display:flex;align-items:center;gap:8px;
+  padding:8px;background:var(--card);
+  border:1px solid rgba(255,107,53,.18);
+  border-radius:16px;
+  max-width:560px;width:100%;
+  margin:0 auto;
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
+  animation:fadeUp .7s ease .4s backwards;
+  transition:border-color .3s,box-shadow .3s;
+}
+.join-card:focus-within{
+  border-color:var(--orange);
+  box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 0 4px rgba(255,107,53,.12);
+}
+.join-card .ic{padding:0 12px;color:var(--muted);flex-shrink:0}
+.join-card input{
+  flex:1;background:transparent;border:none;outline:none;
+  color:var(--text);font-size:15px;padding:14px 0;
+  letter-spacing:1px;font-family:inherit;
+  min-width:0;
+}
+.join-card input::placeholder{color:var(--muted);letter-spacing:0}
+.join-card button{
+  padding:14px 24px;
+  border-radius:11px;border:none;
+  background:linear-gradient(135deg,var(--orange),var(--orange-dark));
+  color:#fff;font-weight:600;cursor:pointer;
+  transition:transform .2s;
+  font-family:inherit;font-size:14px;
+  flex-shrink:0;
+}
+.join-card button:hover{transform:scale(1.04)}
+
+/* Фичи */
+.features{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+  max-width:1000px;
+  margin:64px auto 80px;
+  padding:0 24px;
+}
+.feature{
+  padding:22px;
+  background:linear-gradient(180deg,rgba(255,107,53,.06),rgba(255,107,53,.02));
+  border:1px solid rgba(255,107,53,.12);
+  border-radius:16px;
+  transition:transform .3s,border-color .3s;
+  animation:fadeUp .7s ease backwards;
+}
+.feature:nth-child(1){animation-delay:.5s}
+.feature:nth-child(2){animation-delay:.55s}
+.feature:nth-child(3){animation-delay:.6s}
+.feature:nth-child(4){animation-delay:.65s}
+.feature:nth-child(5){animation-delay:.7s}
+.feature:nth-child(6){animation-delay:.75s}
+.feature:hover{transform:translateY(-4px);border-color:rgba(255,107,53,.4)}
+.feature .ico{font-size:24px;margin-bottom:10px}
+.feature h3{font-size:15px;font-weight:700;margin-bottom:6px}
+.feature p{font-size:13px;color:var(--muted);line-height:1.5}
+
+/* Преви antiтарифов */
+.plans-preview{
+  max-width:1100px;
+  margin:0 auto 80px;
+  padding:0 24px;
+}
+.plans-preview h2{
+  text-align:center;
+  font-size:28px;font-weight:800;
+  letter-spacing:-1px;
+  margin-bottom:8px;
+}
+.plans-preview .sub{
+  text-align:center;
+  color:var(--muted);
+  font-size:15px;
+  margin-bottom:40px;
+}
+.plans-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:20px;
+}
+.plan-mini{
+  background:var(--card);
+  border:1px solid rgba(255,107,53,.15);
+  border-radius:20px;
+  padding:26px;
+  transition:all .3s;
+  position:relative;
+}
+.plan-mini:hover{
+  transform:translateY(-4px);
+  border-color:rgba(255,107,53,.35);
+}
+.plan-mini.featured{
+  border-color:var(--orange);
+  background:linear-gradient(180deg,rgba(255,107,53,.08),var(--card));
+  box-shadow:0 20px 60px rgba(255,107,53,.15);
+}
+.popular-mini{
+  position:absolute;top:-12px;left:50%;
+  transform:translateX(-50%);
+  background:linear-gradient(135deg,var(--orange),var(--orange-dark));
+  color:#fff;padding:5px 14px;border-radius:999px;
+  font-size:10px;font-weight:800;letter-spacing:1px;
+  text-transform:uppercase;
+  box-shadow:0 6px 18px var(--glow);
+  white-space:nowrap;
+}
+.plan-mini h3{
+  font-size:18px;font-weight:800;
+  margin-bottom:6px;
+  display:flex;align-items:center;gap:8px;
+}
+.plan-mini .desc{
+  font-size:13px;color:var(--muted);
+  margin-bottom:18px;min-height:36px;
+}
+.plan-mini .price{
+  display:flex;align-items:flex-end;gap:4px;
+  margin-bottom:16px;
+}
+.plan-mini .price .amt{
+  font-size:34px;font-weight:900;
+  letter-spacing:-1.5px;line-height:1;
+}
+.plan-mini .price .cur{
+  font-size:16px;font-weight:700;
+  color:var(--muted);padding-bottom:4px;
+}
+.plan-mini .price .per{
+  font-size:12px;color:var(--muted);
+  padding-bottom:6px;
+}
+.plan-mini ul{
+  list-style:none;
+  display:flex;flex-direction:column;gap:8px;
+  margin-bottom:18px;
+}
+.plan-mini li{
+  font-size:13px;
+  color:var(--muted);
+  display:flex;align-items:center;gap:8px;
+}
+.plan-mini li::before{
+  content:'✓';
+  color:var(--green);
+  font-weight:700;
+  font-size:11px;
+}
+.plan-mini a{
+  display:block;
+  text-align:center;
+  padding:11px;
+  border-radius:11px;
+  font-size:13px;font-weight:700;
+  text-decoration:none;
+  transition:all .2s;
+  border:1px solid rgba(255,107,53,.25);
+  background:rgba(255,255,255,.04);
+  color:var(--text);
+}
+.plan-mini a:hover{background:rgba(255,107,53,.15)}
+.plan-mini.featured a{
+  background:linear-gradient(135deg,var(--orange),var(--orange-dark));
+  color:#fff;
+  border:none;
+  box-shadow:0 8px 22px var(--glow);
+}
+.plan-mini.featured a:hover{transform:translateY(-2px)}
+
+/* CTA внизу */
+.cta-bottom{
+  max-width:900px;
+  margin:0 auto 80px;
+  padding:60px 40px;
+  text-align:center;
+  background:linear-gradient(135deg,rgba(255,107,53,.1),rgba(224,85,32,.06));
+  border:1px solid rgba(255,107,53,.25);
+  border-radius:28px;
+  position:relative;
+  overflow:hidden;
+}
+.cta-bottom::before{
+  content:'';
+  position:absolute;
+  top:-50%;left:-50%;
+  width:200%;height:200%;
+  background:conic-gradient(from 0deg,transparent,rgba(255,107,53,.15),transparent 30%);
+  animation:rotate 8s linear infinite;
+  z-index:0;
+}
+@keyframes rotate{to{transform:rotate(360deg)}}
+.cta-bottom > *{position:relative;z-index:1}
+.cta-bottom h2{
+  font-size:32px;font-weight:900;
+  letter-spacing:-1px;
+  margin-bottom:14px;
+}
+.cta-bottom p{
+  color:var(--muted);
+  font-size:16px;
+  margin-bottom:28px;
+}
+.cta-bottom .buttons{
+  display:flex;gap:12px;justify-content:center;
+  flex-wrap:wrap;
+}
+
+/* Модальное окно имени */
+.modal{
+  position:fixed;inset:0;
+  background:rgba(10,5,3,.8);
+  backdrop-filter:blur(8px);
+  display:none;align-items:center;justify-content:center;
+  z-index:1000;padding:20px;
+}
+.modal.show{display:flex;animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+.modal-card{
+  background:var(--card);
+  border:1px solid rgba(255,107,53,.25);
+  border-radius:20px;
+  padding:32px;width:100%;max-width:440px;
+  animation:popIn .35s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 30px 80px rgba(0,0,0,.6);
+}
+@keyframes popIn{
+  from{opacity:0;transform:scale(.9) translateY(20px)}
+  to{opacity:1;transform:scale(1) translateY(0)}
+}
+.modal-card h2{font-size:22px;margin-bottom:6px;font-weight:800}
+.modal-card .sub{color:var(--muted);font-size:14px;margin-bottom:22px}
+.modal-card input{
+  width:100%;padding:14px 16px;
+  border-radius:12px;
+  border:1px solid rgba(255,107,53,.25);
+  background:var(--bg2);color:var(--text);
+  font-family:inherit;font-size:15px;
+  outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+.modal-card input:focus{
+  border-color:var(--orange);
+  box-shadow:0 0 0 4px rgba(255,107,53,.12);
+}
+.modal-actions{
+  display:flex;gap:10px;margin-top:20px;
+}
+.modal-actions .btn{
+  flex:1;justify-content:center;
+  padding:13px 20px;font-size:14px;
+}
+
+@media (max-width:640px){
+  .hero{padding:50px 20px 40px}
+  .cta-row{flex-direction:column;align-items:stretch}
+  .btn{justify-content:center}
+  .join-card{flex-direction:column;padding:14px;gap:10px}
+  .join-card .ic{display:none}
+  .join-card input{text-align:center;width:100%}
+  .join-card button{width:100%}
+  .cta-bottom{padding:40px 24px}
+  .cta-bottom h2{font-size:24px}
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="brand">
+    <div class="brand-mark">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 10l4.55-2.27A1 1 0 0121 8.62v6.76a1 1 0 01-1.45.89L15 14"/>
+        <rect x="3" y="6" width="12" height="12" rx="2"/>
+      </svg>
+    </div>
+    Sink<span>Conferentions</span>
+  </a>
+  <div class="nav-right" id="navRight">
+    <a href="features.html">Возможности</a>
+    <a href="pricing.html">Тарифы</a>
+    <a href="support.html">Поддержка</a>
+    <a href="auth.html" id="navAuthBtn" class="nav-cta">Войти</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge" id="serverStatus">
+    <span class="dot"></span>
+    <span id="statusText">Проверка сервера…</span>
+  </div>
+
+  <h1>Звонки, которые <span class="grad">работают</span></h1>
+  <p class="lead">
+    Видеоконференции с демонстрацией экрана, интерактивной доской, чатом,
+    опросами и личными сообщениями. Без регистрации. Без лишнего.
+  </p>
+
+  <div class="cta-row">
+    <button class="btn btn-primary" id="createBtn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <path d="M12 5v14M5 12h14"/>
+      </svg>
+      Новая конференция
+    </button>
+    <a href="auth.html?tab=register" class="btn btn-ghost">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>
+      </svg>
+      Создать аккаунт
+    </a>
+  </div>
+
+  <div class="join-card">
+    <span class="ic">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
+        <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
+      </svg>
+    </span>
+    <input type="text" id="roomInput" placeholder="ID комнаты или ссылка-приглашение" />
+    <button id="joinBtn">Войти</button>
+  </div>
+</section>
+
+<section class="features">
+  <div class="feature">
+    <div class="ico">🎥</div>
+    <h3>HD-видео</h3>
+    <p>Peer-to-peer соединение через WebRTC. Задержка как при живом разговоре.</p>
+  </div>
+  <div class="feature">
+    <div class="ico">🖥️</div>
+    <h3>Демонстрация экрана</h3>
+    <p>Показывайте экран и рисуйте поверх прямо во время презентации.</p>
+  </div>
+  <div class="feature">
+    <div class="ico">✏️</div>
+    <h3>Общая доска</h3>
+    <p>Карандаш, ластик, зум, панорама. Включайте и выключайте показ в один клик.</p>
+  </div>
+  <div class="feature">
+    <div class="ico">💬</div>
+    <h3>Чат и опросы</h3>
+    <p>Общий чат, личные сообщения, фото, опросы с живой статистикой.</p>
+  </div>
+  <div class="feature">
+    <div class="ico">✋</div>
+    <h3>Руки и реакции</h3>
+    <p>Поднимайте руку, кидайте эмодзи — общение без слов и перебиваний.</p>
+  </div>
+  <div class="feature">
+    <div class="ico">🛡️</div>
+    <h3>Админ-панель</h3>
+    <p>Модерация, отключение микрофонов и управление показом доски.</p>
+  </div>
+</section>
+
+<!-- ============ ТАРИФЫ (превью) ============ -->
+<section class="plans-preview">
+  <h2>Выберите свой тариф</h2>
+  <p class="sub">Начните бесплатно — перейдите на платный, когда потребуется больше</p>
+
+  <div class="plans-grid">
+    <div class="plan-mini">
+      <h3>🌱 Free</h3>
+      <div class="desc">Для знакомства и коротких звонков с друзьями.</div>
+      <div class="price">
+        <span class="amt">0</span>
+        <span class="cur">₽</span>
+        <span class="per">навсегда</span>
+      </div>
+      <ul>
+        <li>До 5 участников</li>
+        <li>40 минут на звонок</li>
+        <li>HD-видео 720p</li>
+        <li>Доска и чат</li>
+      </ul>
+      <a href="pricing.html">Начать бесплатно</a>
+    </div>
+
+    <div class="plan-mini featured">
+      <div class="popular-mini">Популярный</div>
+      <h3>🚀 Start</h3>
+      <div class="desc">Для команд и фрилансеров.</div>
+      <div class="price">
+        <span class="amt">490</span>
+        <span class="cur">₽</span>
+        <span class="per">/ месяц</span>
+      </div>
+      <ul>
+        <li>До 25 участников</li>
+        <li>4 часа на звонок</li>
+        <li>Full HD 1080p</li>
+        <li>Опросы и реакции</li>
+      </ul>
+      <a href="pricing.html">Попробовать 14 дней</a>
+    </div>
+
+    <div class="plan-mini">
+      <h3>💎 Pro</h3>
+      <div class="desc">Максимум возможностей для крупных команд.</div>
+      <div class="price">
+        <span class="amt">1 290</span>
+        <span class="cur">₽</span>
+        <span class="per">/ месяц</span>
+      </div>
+      <ul>
+        <li>До 200 участников</li>
+        <li>Без ограничений</li>
+        <li>4K · 60 fps</li>
+        <li>Админ-панель и API</li>
+      </ul>
+      <a href="pricing.html">Оформить Pro</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="cta-bottom">
+  <h2>Готовы попробовать?</h2>
+  <p>Создайте первую конференцию за 5 секунд. Аккаунт не нужен.</p>
+  <div class="buttons">
+    <button class="btn btn-primary" onclick="document.getElementById('createBtn').click()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <path d="M12 5v14M5 12h14"/>
+      </svg>
+      Новая конференция
+    </button>
+    <a href="features.html" class="btn btn-ghost">Все возможности →</a>
+  </div>
+</section>
+
+<footer class="footer">
+  © 2026 SinkConferentions · Сделано на GitHub + Render + Supabase
+</footer>
+
+<!-- Модальное окно имени -->
+<div class="modal" id="nameModal">
+  <div class="modal-card">
+    <h2>Как вас зовут?</h2>
+    <p class="sub">Имя увидят другие участники. Аккаунт не нужен.</p>
+    <input type="text" id="displayNameInput" placeholder="Например, Семён Иванов" maxlength="30" autofocus />
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeNameModal()">Отмена</button>
+      <button class="btn btn-primary" id="confirmNameBtn">Продолжить</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
 /* ============================================================
-   SinkConferentions — Signaling Server (v2)
-   Комнаты живут в Supabase, память — только кэш
+   SinkConferentions — Главная страница
    ============================================================ */
+const $ = (s) => document.querySelector(s);
 
-require('dotenv').config();
-const express = require('express');
-const http = require('http');
-const path = require('path');
-const cors = require('cors');
-const { Server } = require('socket.io');
-const { createClient } = require('@supabase/supabase-js');
-const { v4: uuidv4 } = require('uuid');
+// ---------- Сессия ----------
+let currentUser = (() => {
+  try { return JSON.parse(localStorage.getItem('sink_session')); }
+  catch { return null; }
+})();
 
-const app = express();
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: { origin: process.env.ALLOWED_ORIGINS || '*', credentials: true },
-  maxHttpBufferSize: 5e6
-});
+// ---------- Проверка сервера ----------
+async function checkServer() {
+  const badge = $('#serverStatus');
+  const text = $('#statusText');
+  try {
+    const res = await fetch('/api/health', { cache: 'no-store' });
+    if (!res.ok) throw new Error('bad');
+    const data = await res.json();
+    text.textContent = `Сервер онлайн · ${data.rooms || 0} комнат · Supabase: ${data.supabase ? '✅' : '⚠️'}`;
+    badge.classList.remove('offline');
+  } catch (e) {
+    text.textContent = 'Сервер просыпается… (Render Free, до 30 сек)';
+    badge.classList.add('offline');
+    // Повторим через 5 секунд
+    setTimeout(checkServer, 5000);
+  }
+}
+checkServer();
 
-// ---------- Supabase ----------
-const supabase = createClient(
-  process.env.SUPABASE_URL || '',
-  process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY || ''
-);
+// ---------- Обновление навбара ----------
+function updateNavbar() {
+  const nav = $('#navRight');
+  const authBtn = $('#navAuthBtn');
 
-const hasSupabase = !!(process.env.SUPABASE_URL && (process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY));
+  if (currentUser) {
+    if (authBtn) authBtn.style.display = 'none';
+    if (nav.querySelector('.user-chip')) return;
 
-app.use(cors());
-app.use(express.json({ limit: '10mb' }));
-app.use(express.static(path.join(__dirname, '..', 'public')));
+    const chip = document.createElement('div');
+    chip.className = 'user-chip';
+    chip.innerHTML = `
+      <div class="avatar">${currentUser.avatar || currentUser.name[0].toUpperCase()}</div>
+      <span>${escapeHtml(currentUser.name)}</span>
+    `;
+    chip.onclick = () => location.href = 'profile.html';
+    nav.appendChild(chip);
+  }
+}
+updateNavbar();
 
-// ============================================================
-// In-memory кэш (для WebRTC-сигналинга — быстро)
-// ============================================================
-const rooms = new Map();          // roomId -> { participants: Map, adminId, boardEnabled, whiteboardData }
-const subscriptions = new Map();
+// ---------- Утилита: тост ----------
+function toast(msg, type = 'info') {
+  const t = $('#toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type !== 'info' ? ' ' + type : '');
+  clearTimeout(window._tt);
+  window._tt = setTimeout(() => t.classList.remove('show'), 2800);
+}
 
-const PLANS = {
-  free:  { name: 'Free',  maxParticipants: 5 },
-  start: { name: 'Start', maxParticipants: 25 },
-  pro:   { name: 'Pro',   maxParticipants: 200 }
+// ---------- Модалка имени ----------
+function openNameModal(cb) {
+  const modal = $('#nameModal');
+  modal.classList.add('show');
+  $('#displayNameInput').focus();
+  modal._cb = cb;
+}
+function closeNameModal() {
+  $('#nameModal').classList.remove('show');
+}
+
+$('#confirmNameBtn').onclick = () => {
+  const name = $('#displayNameInput').value.trim() || 'Гость';
+  localStorage.setItem('displayName', name);
+  const cb = $('#nameModal')._cb;
+  closeNameModal();
+  cb && cb(name);
 };
 
+$('#displayNameInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') $('#confirmNameBtn').click();
+});
+
+// ---------- Создание комнаты через сервер ----------
+function createRoom(name) {
+  const btn = $('#createBtn');
+  btn.disabled = true;
+  const original = btn.innerHTML;
+  btn.innerHTML = '⏳ Создание...';
+
+  // Пробуем через Socket.IO — если есть
+  if (window.io) {
+    try {
+      const tempSocket = io({ timeout: 8000 });
+
+      const timeout = setTimeout(() => {
+        tempSocket.close();
+        // Fallback: локальная генерация ID
+        const roomId = generateRoomId();
+        sessionStorage.setItem('displayName', name);
+        location.href = `/room.html?room=${roomId}`;
+      }, 8000);
+
+      tempSocket.on('connect', () => {
+        tempSocket.emit('create-room', { userName: name, isAuthenticated: !!currentUser }, (res) => {
+          clearTimeout(timeout);
+          if (res?.roomId) {
+            sessionStorage.setItem('displayName', name);
+            location.href = `/room.html?room=${res.roomId.toUpperCase()}`;
+          } else {
+            // Fallback
+            const roomId = generateRoomId();
+            sessionStorage.setItem('displayName', name);
+            location.href = `/room.html?room=${roomId}`;
+          }
+        });
+      });
+
+      tempSocket.on('connect_error', () => {
+        clearTimeout(timeout);
+        const roomId = generateRoomId();
+        sessionStorage.setItem('displayName', name);
+        location.href = `/room.html?room=${roomId}`;
+      });
+    } catch (e) {
+      // fallback
+      const roomId = generateRoomId();
+      sessionStorage.setItem('displayName', name);
+      location.href = `/room.html?room=${roomId}`;
+    }
+  } else {
+    // Нет Socket.IO — генерируем ID локально, комната создастся при join
+    const roomId = generateRoomId();
+    sessionStorage.setItem('displayName', name);
+    location.href = `/room.html?room=${roomId}`;
+  }
+
+  // Возвращаем кнопку через 10 сек на всякий
+  setTimeout(() => {
+    btn.disabled = false;
+    btn.innerHTML = original;
+  }, 10000);
+}
+
+// ---------- Генерация ID (fallback) ----------
 function generateRoomId() {
   const chars = 'abcdefghijkmnpqrstuvwxyz23456789';
   let id = '';
@@ -50,469 +727,56 @@ function generateRoomId() {
   return id;
 }
 
-// ---------- Получить или создать комнату (в памяти + Supabase) ----------
-async function getOrCreateRoom(roomId, adminSocketId = null) {
-  let room = rooms.get(roomId);
-
-  if (!room) {
-    room = {
-      id: roomId,
-      participants: new Map(),
-      adminId: adminSocketId,
-      boardEnabled: true,
-      whiteboardData: null,
-      createdAt: Date.now()
-    };
-    rooms.set(roomId, room);
+// ---------- Кнопка «Новая конференция» ----------
+$('#createBtn').onclick = () => {
+  const name = currentUser?.name || localStorage.getItem('displayName');
+  if (name) {
+    createRoom(name);
+  } else {
+    openNameModal((n) => createRoom(n));
   }
+};
 
-  // Пишем в Supabase (асинхронно, не блокируем)
-  if (hasSupabase) {
-    supabase.from('rooms').upsert({
-      id: roomId,
-      admin_id: room.adminId,
-      board_enabled: room.boardEnabled,
-      updated_at: new Date().toISOString()
-    }, { onConflict: 'id' }).then(({ error }) => {
-      if (error) console.warn('[room upsert]', error.message);
-    });
-  }
+// ---------- Вход по ID / ссылке ----------
+$('#joinBtn').onclick = () => {
+  const raw = $('#roomInput').value.trim();
+  if (!raw) return toast('Введите ID комнаты', 'error');
 
-  return room;
-}
-
-function serializeRoom(room) {
-  return {
-    id: room.id,
-    participants: Array.from(room.participants.entries()).map(([id, p]) => ({
-      id,
-      name: p.name,
-      isAdmin: p.isAdmin,
-      mediaState: p.mediaState,
-      handRaised: p.handRaised,
-      joinedAt: p.joinedAt
-    })),
-    adminId: room.adminId,
-    boardEnabled: room.boardEnabled
-  };
-}
-
-// ============================================================
-// Socket.IO
-// ============================================================
-io.on('connection', (socket) => {
-  console.log('[+] Connected:', socket.id);
-
-  // ---------- Создание комнаты ----------
-  socket.on('create-room', async ({ userName, isAuthenticated }, callback) => {
-    const roomId = generateRoomId();
-    const adminId = isAuthenticated ? socket.id : null;
-    const room = await getOrCreateRoom(roomId, adminId);
-
-    room.participants.set(socket.id, {
-      name: userName || 'Гость',
-      isAdmin: isAuthenticated,
-      mediaState: { audio: true, video: true, screen: false },
-      handRaised: false,
-      joinedAt: Date.now()
-    });
-
-    socket.join(roomId);
-    callback({ roomId, isAdmin: isAuthenticated });
-    io.to(roomId).emit('room-update', serializeRoom(room));
-
-    // Сохраняем участника в Supabase
-    if (hasSupabase) {
-      supabase.from('room_participants').insert({
-        room_id: roomId,
-        socket_id: socket.id,
-        name: userName || 'Гость',
-        is_admin: isAuthenticated
-      }).then(() => {});
-    }
-  });
-
-  // ---------- Присоединение (комната создаётся, если нет) ----------
-  socket.on('join-room', async ({ roomId, userName, isAuthenticated }, callback) => {
-    // КЛЮЧЕВОЕ ИЗМЕНЕНИЕ: комната создаётся автоматически, а не отдаём ошибку
-    const room = await getOrCreateRoom(roomId.toUpperCase());
-
-    const isAdmin =
-      userName === 'bdfka' ||
-      userName === 'Семён Иванов' ||
-      isAuthenticated === true;
-
-    room.participants.set(socket.id, {
-      name: userName || 'Гость',
-      isAdmin,
-      mediaState: { audio: true, video: true, screen: false },
-      handRaised: false,
-      joinedAt: Date.now()
-    });
-
-    if (isAdmin) room.adminId = socket.id;
-
-    socket.join(roomId);
-    callback({
-      roomId,
-      isAdmin,
-      boardEnabled: room.boardEnabled,
-      participants: serializeRoom(room).participants
-    });
-
-    if (room.whiteboardData) {
-      socket.emit('whiteboard-state', room.whiteboardData);
-    }
-
-    io.to(roomId).emit('room-update', serializeRoom(room));
-
-    if (hasSupabase) {
-      supabase.from('room_participants').insert({
-        room_id: roomId.toUpperCase(),
-        socket_id: socket.id,
-        name: userName || 'Гость',
-        is_admin: isAdmin
-      }).then(() => {});
-    }
-  });
-
-  // ---------- WebRTC ----------
-  socket.on('offer', ({ targetId, offer }) => {
-    io.to(targetId).emit('offer', { fromId: socket.id, offer });
-  });
-
-  socket.on('answer', ({ targetId, answer }) => {
-    io.to(targetId).emit('answer', { fromId: socket.id, answer });
-  });
-
-  socket.on('ice-candidate', ({ targetId, candidate }) => {
-    io.to(targetId).emit('ice-candidate', { fromId: socket.id, candidate });
-  });
-
-  // ---------- Медиа ----------
-  socket.on('toggle-media', async ({ roomId, type, enabled }) => {
-    const room = rooms.get(roomId);
-    if (!room) return;
-    const p = room.participants.get(socket.id);
-    if (p) {
-      p.mediaState[type] = enabled;
-      io.to(roomId).emit('media-update', { socketId: socket.id, type, enabled });
-      io.to(roomId).emit('room-update', serializeRoom(room));
-
-      if (hasSupabase) {
-        supabase.from('room_participants')
-          .update({ [type]: enabled, last_seen: new Date().toISOString() })
-          .eq('socket_id', socket.id).then(() => {});
-      }
-    }
-  });
-
-  socket.on('admin-force-media', ({ roomId, targetId, type, enabled }) => {
-    const room = rooms.get(roomId);
-    if (!room || socket.id !== room.adminId) return;
-    io.to(targetId).emit('force-media-toggle', { type, enabled });
-  });
-
-  // ---------- Руки ----------
-  socket.on('raise-hand', ({ roomId, raised }) => {
-    const room = rooms.get(roomId);
-    if (!room) return;
-    const p = room.participants.get(socket.id);
-    if (p) {
-      p.handRaised = raised;
-      io.to(roomId).emit('hand-update', { socketId: socket.id, raised });
-      io.to(roomId).emit('room-update', serializeRoom(room));
-    }
-  });
-
-  socket.on('lower-all-hands', ({ roomId }) => {
-    const room = rooms.get(roomId);
-    if (!room || socket.id !== room.adminId) return;
-    room.participants.forEach((p, id) => {
-      p.handRaised = false;
-      io.to(roomId).emit('hand-update', { socketId: id, raised: false });
-    });
-    io.to(roomId).emit('room-update', serializeRoom(room));
-  });
-
-  // ---------- Доска ----------
-  socket.on('toggle-board-visibility', ({ roomId, enabled }) => {
-    const room = rooms.get(roomId);
-    if (!room || socket.id !== room.adminId) return;
-    room.boardEnabled = enabled;
-    io.to(roomId).emit('board-visibility', enabled);
-  });
-
-  socket.on('save-whiteboard', ({ roomId, data }) => {
-    const room = rooms.get(roomId);
-    if (!room) return;
-    room.whiteboardData = data;
-    socket.to(roomId).emit('whiteboard-draw', data);
-  });
-
-  socket.on('whiteboard-clear', ({ roomId }) => {
-    const room = rooms.get(roomId);
-    if (!room) return;
-    room.whiteboardData = null;
-    io.to(roomId).emit('whiteboard-clear');
-  });
-
-  // ---------- Чат ----------
-  socket.on('chat-message', async ({ roomId, message }) => {
-    const room = rooms.get(roomId);
-    if (!room) return;
-    const sender = room.participants.get(socket.id);
-    if (!sender) return;
-
-    const payload = {
-      id: message.id || uuidv4(),
-      roomId,
-      senderId: socket.id,
-      senderName: sender.name,
-      recipientId: message.recipientId || null,
-      type: message.type,
-      content: message.content,
-      createdAt: new Date().toISOString()
-    };
-
-    if (hasSupabase) {
-      supabase.from('messages').insert({
-        id: payload.id,
-        room_id: roomId,
-        sender_id: socket.id,
-        sender_name: sender.name,
-        recipient_id: message.recipientId || null,
-        type: message.type,
-        content: message.content
-      }).then(() => {});
-    }
-
-    if (message.recipientId) {
-      io.to(socket.id).emit('chat-message', payload);
-      io.to(message.recipientId).emit('chat-message', payload);
-    } else {
-      io.to(roomId).emit('chat-message', payload);
-    }
-  });
-
-  socket.on('load-chat-history', async ({ roomId }, callback) => {
-    if (!hasSupabase) return callback({ messages: [] });
-    const { data } = await supabase
-      .from('messages')
-      .select('*')
-      .eq('room_id', roomId)
-      .is('recipient_id', null)
-      .order('created_at', { ascending: true })
-      .limit(200);
-    callback({ messages: data || [] });
-  });
-
-  socket.on('typing', ({ roomId, recipientId, isTyping }) => {
-    const room = rooms.get(roomId);
-    if (!room) return;
-    const sender = room.participants.get(socket.id);
-    if (!sender) return;
-    const payload = { senderId: socket.id, senderName: sender.name, isTyping };
-    if (recipientId) io.to(recipientId).emit('typing', payload);
-    else socket.to(roomId).emit('typing', payload);
-  });
-
-  socket.on('poll-vote', async ({ roomId, messageId, optionIndex }) => {
-    const room = rooms.get(roomId);
-    if (!room) return;
-    const voter = room.participants.get(socket.id);
-    if (!voter) return;
-
-    if (hasSupabase) {
-      await supabase.from('poll_votes').upsert({
-        message_id: messageId,
-        voter_id: socket.id,
-        voter_name: voter.name,
-        option_index: optionIndex
-      }, { onConflict: 'message_id,voter_id' });
-
-      const { data: votes } = await supabase
-        .from('poll_votes')
-        .select('option_index, voter_id, voter_name')
-        .eq('message_id', messageId);
-
-      io.to(roomId).emit('poll-update', { messageId, votes: votes || [] });
-    }
-  });
-
-  // ---------- Отключение ----------
-  socket.on('disconnect', () => {
-    console.log('[-] Disconnected:', socket.id);
-
-    rooms.forEach((room, roomId) => {
-      if (room.participants.has(socket.id)) {
-        room.participants.delete(socket.id);
-        if (room.adminId === socket.id) room.adminId = null;
-
-        io.to(roomId).emit('room-update', serializeRoom(room));
-
-        if (hasSupabase) {
-          supabase.from('room_participants')
-            .delete()
-            .eq('socket_id', socket.id)
-            .then(() => {});
-        }
-
-        if (room.participants.size === 0) {
-          // Комнату оставляем в Supabase, но убираем из памяти
-          setTimeout(() => {
-            const r = rooms.get(roomId);
-            if (r && r.participants.size === 0) {
-              rooms.delete(roomId);
-              console.log('[room] cleaned from memory:', roomId);
-            }
-          }, 60000);
-        }
-      }
-    });
-  });
-});
-
-// ============================================================
-// HTTP API — аккаунты, подписки, комнаты
-// ============================================================
-
-function isAdminReq(req) {
-  return req.headers['x-admin-key'] === process.env.ADMIN_MASTER_KEY;
-}
-
-// ---------- Список участников комнаты ----------
-app.get('/api/rooms/:roomId/participants', async (req, res) => {
-  const roomId = req.params.roomId.toUpperCase();
-  const room = rooms.get(roomId);
-
-  // Сначала память
-  if (room) {
-    return res.json({
-      source: 'memory',
-      participants: serializeRoom(room).participants,
-      boardEnabled: room.boardEnabled
-    });
-  }
-
-  // Потом Supabase
-  if (hasSupabase) {
-    const { data } = await supabase
-      .from('room_participants')
-      .select('*')
-      .eq('room_id', roomId);
-    return res.json({
-      source: 'supabase',
-      participants: (data || []).map(p => ({
-        id: p.socket_id,
-        name: p.name,
-        isAdmin: p.is_admin,
-        mediaState: { audio: p.audio, video: p.video, screen: p.screen },
-        handRaised: p.hand_raised,
-        joinedAt: new Date(p.joined_at).getTime()
-      }))
-    });
-  }
-
-  res.json({ participants: [] });
-});
-
-// ---------- Проверка комнаты ----------
-app.get('/api/rooms/:roomId', async (req, res) => {
-  const roomId = req.params.roomId.toUpperCase();
-  const room = rooms.get(roomId);
-  if (room) return res.json({ exists: true, source: 'memory', participants: room.participants.size });
-
-  if (hasSupabase) {
-    const { data } = await supabase.from('rooms').select('id').eq('id', roomId).maybeSingle();
-    return res.json({ exists: !!data, source: 'supabase' });
-  }
-  res.json({ exists: false });
-});
-
-// ---------- Регистрация / Вход (не меняем) ----------
-app.post('/api/register', async (req, res) => {
-  const { name, email, login, password } = req.body;
-  if (!name || !email || !login || !password) return res.status(400).json({ error: 'Все поля обязательны' });
-  if (!hasSupabase) return res.json({ ok: true, user: { id: 'local_' + Date.now(), name, email, login, plan: 'free' } });
-
+  let roomId = raw;
   try {
-    const { data, error } = await supabase.from('users').insert({
-      name, email: email.toLowerCase(), login: login.toLowerCase(),
-      password_hash: password,
-      is_admin: login.toLowerCase() === process.env.ADMIN_LOGIN,
-      plan: login.toLowerCase() === process.env.ADMIN_LOGIN ? 'pro' : 'free'
-    }).select().single();
-    if (error) throw error;
-    res.json({ ok: true, user: data });
-  } catch (e) { res.status(400).json({ error: e.message }); }
+    if (raw.includes('http') || raw.includes('?room=')) {
+      const url = new URL(raw, location.origin);
+      roomId = url.searchParams.get('room') || raw;
+    }
+  } catch {}
+  roomId = roomId.toUpperCase();
+
+  const name = currentUser?.name || localStorage.getItem('displayName');
+  if (name) {
+    location.href = `/room.html?room=${roomId}`;
+  } else {
+    openNameModal((n) => {
+      localStorage.setItem('displayName', n);
+      location.href = `/room.html?room=${roomId}`;
+    });
+  }
+};
+
+$('#roomInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') $('#joinBtn').click();
 });
 
-app.post('/api/login', async (req, res) => {
-  const { identifier, password } = req.body;
-  if (!identifier || !password) return res.status(400).json({ error: 'Заполните поля' });
-  if (!hasSupabase) return res.json({ ok: true, user: { id: 'local', name: identifier, login: identifier, plan: 'free' } });
+// ---------- Автозаполнение из ссылки ----------
+const params = new URLSearchParams(location.search);
+const invite = params.get('room');
+if (invite) $('#roomInput').value = invite.toUpperCase();
 
-  try {
-    const { data: users, error } = await supabase.from('users').select('*')
-      .or(`email.eq.${identifier.toLowerCase()},login.eq.${identifier.toLowerCase()}`).limit(1);
-    if (error) throw error;
-    const user = users[0];
-    if (!user) return res.status(404).json({ error: 'Пользователь не найден' });
-    if (user.password_hash !== password) return res.status(401).json({ error: 'Неверный пароль' });
-    res.json({ ok: true, user });
-  } catch (e) { res.status(400).json({ error: e.message }); }
-});
-
-// ---------- Подписки ----------
-app.get('/api/subscription/:userId', (req, res) => {
-  res.json({ subscription: subscriptions.get(req.params.userId) || { plan: 'free' } });
-});
-
-app.post('/api/admin/subscription', (req, res) => {
-  if (!isAdminReq(req)) return res.status(403).json({ error: 'Доступ запрещён' });
-  const { userId, plan, days, issuedBy } = req.body;
-  if (!userId || !plan) return res.status(400).json({ error: 'userId и plan обязательны' });
-  if (!PLANS[plan]) return res.status(400).json({ error: 'Неизвестный тариф' });
-
-  const sub = {
-    userId, plan,
-    expiresAt: days ? Date.now() + days * 86400000 : null,
-    issuedBy: issuedBy || 'bdfka',
-    issuedAt: Date.now()
-  };
-  subscriptions.set(userId, sub);
-  res.json({ ok: true, subscription: sub });
-});
-
-app.get('/api/admin/subscriptions', (req, res) => {
-  if (!isAdminReq(req)) return res.status(403).json({ error: 'Доступ запрещён' });
-  res.json({ subscriptions: Array.from(subscriptions.values()) });
-});
-
-app.delete('/api/admin/subscription/:userId', (req, res) => {
-  if (!isAdminReq(req)) return res.status(403).json({ error: 'Доступ запрещён' });
-  subscriptions.delete(req.params.userId);
-  res.json({ ok: true });
-});
-
-app.get('/api/plans', (req, res) => res.json({ plans: PLANS }));
-
-app.get('/api/health', (req, res) => {
-  res.json({
-    ok: true,
-    rooms: rooms.size,
-    subscriptions: subscriptions.size,
-    supabase: hasSupabase,
-    uptime: process.uptime()
-  });
-});
-
-const PORT = process.env.PORT || 3001;
-server.listen(PORT, () => {
-  console.log(`\n  SinkConferentions Server запущен`);
-  console.log(`  Порт: ${PORT}`);
-  console.log(`  Админ: ${process.env.ADMIN_LOGIN || 'bdfka'}`);
-  console.log(`  Supabase: ${hasSupabase ? 'подключён' : 'не настроен (fallback режим)'}`);
-  console.log(`  URL: ${process.env.RENDER_EXTERNAL_URL || 'http://localhost:' + PORT}\n`);
-});
+// ---------- Утилита escape ----------
+function escapeHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s || '';
+  return d.innerHTML;
+}
+</script>
+</body>
+</html>
