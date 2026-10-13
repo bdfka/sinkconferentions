@@ -705,6 +705,463 @@ input[type=checkbox].hidden-cb:checked + .switch::after{transform:translateX(16p
 }
 .btn-ghost:hover{background:rgba(255,107,53,.15)}
 
+/* ============================================================
+   ТЕМА 1: bdfkaDev — синий киберпанк
+   ============================================================ */
+body.theme-bdfkaDev {
+  --orange: #3B82F6;
+  --orange-dark: #1D4ED8;
+  --orange-light: #60A5FA;
+  --glow: rgba(59, 130, 246, 0.5);
+  --bg: #0A0F1C;
+  --bg2: #111827;
+  --card: #1A2234;
+  --card2: #253048;
+  --text: #E0F2FE;
+  --muted: #7DA8C7;
+  --green: #22D3EE;
+}
+
+body.theme-bdfkaDev::before {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(59, 130, 246, .2), transparent 45%),
+    radial-gradient(circle at 80% 80%, rgba(34, 211, 238, .12), transparent 50%),
+    linear-gradient(rgba(59, 130, 246, .04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, .04) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+}
+
+body.theme-bdfkaDev .video-tile {
+  border-color: rgba(59, 130, 246, .3);
+  box-shadow: 0 0 20px rgba(59, 130, 246, .08) inset;
+}
+
+body.theme-bdfkaDev .video-tile.speaking {
+  border-color: #22D3EE;
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, .3), 0 0 40px rgba(34, 211, 238, .35);
+}
+
+body.theme-bdfkaDev .ctrl {
+  background: linear-gradient(180deg, rgba(59, 130, 246, .12), rgba(59, 130, 246, .04));
+  border: 1px solid rgba(59, 130, 246, .25);
+  position: relative;
+  overflow: hidden;
+}
+body.theme-bdfkaDev .ctrl::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, transparent 0%, rgba(34, 211, 238, .15) 50%, transparent 100%);
+  opacity: 0;
+  transition: opacity .3s;
+  pointer-events: none;
+}
+body.theme-bdfkaDev .ctrl:hover::after { opacity: 1; }
+body.theme-bdfkaDev .ctrl.active {
+  background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(59, 130, 246, .6), 0 0 40px rgba(59, 130, 246, .3) inset;
+}
+
+body.theme-bdfkaDev .chat {
+  border-left: 1px solid rgba(59, 130, 246, .3);
+  box-shadow: -10px 0 40px rgba(59, 130, 246, .1);
+}
+body.theme-bdfkaDev .msg {
+  background: rgba(59, 130, 246, .1);
+  border-left: 2px solid rgba(34, 211, 238, .4);
+}
+body.theme-bdfkaDev .msg.own {
+  background: rgba(59, 130, 246, .22);
+  border-left: none;
+  border-right: 2px solid rgba(34, 211, 238, .6);
+}
+
+body.theme-bdfkaDev .p-avatar,
+body.theme-bdfkaDev .dm-avatar {
+  background: linear-gradient(135deg, #3B82F6, #22D3EE);
+  box-shadow: 0 0 15px rgba(34, 211, 238, .4);
+}
+body.theme-bdfkaDev .p-avatar.admin {
+  background: linear-gradient(135deg, #22D3EE, #3B82F6);
+  box-shadow: 0 0 20px rgba(34, 211, 238, .7), 0 0 40px rgba(59, 130, 246, .5);
+}
+
+body.theme-bdfkaDev .controls {
+  background: rgba(26, 34, 52, .95);
+  border: 1px solid rgba(59, 130, 246, .35);
+  box-shadow: 0 0 30px rgba(59, 130, 246, .2), 0 20px 60px rgba(0, 0, 0, .7);
+}
+body.theme-bdfkaDev .room-info {
+  background: rgba(26, 34, 52, .9);
+  border-color: rgba(59, 130, 246, .35);
+  box-shadow: 0 0 15px rgba(59, 130, 246, .15);
+}
+body.theme-bdfkaDev .room-id {
+  color: #22D3EE;
+  text-shadow: 0 0 10px rgba(34, 211, 238, .6);
+}
+body.theme-bdfkaDev .rec-dot::before {
+  background: #22D3EE;
+  box-shadow: 0 0 12px #22D3EE;
+}
+body.theme-bdfkaDev .modal-card {
+  border: 1px solid rgba(59, 130, 246, .4);
+  box-shadow: 0 0 50px rgba(59, 130, 246, .2), 0 30px 80px rgba(0, 0, 0, .8);
+}
+body.theme-bdfkaDev .board {
+  border-color: rgba(59, 130, 246, .35);
+  box-shadow: 0 0 30px rgba(59, 130, 246, .1) inset;
+}
+body.theme-bdfkaDev .board-toolbar,
+body.theme-bdfkaDev .board-settings {
+  background: rgba(26, 34, 52, .95);
+  border-color: rgba(59, 130, 246, .35);
+}
+body.theme-bdfkaDev .participants {
+  border-left: 1px solid rgba(59, 130, 246, .3);
+  box-shadow: -10px 0 40px rgba(59, 130, 246, .1);
+}
+body.theme-bdfkaDev #tile-self {
+  animation: bdfkaDevPulse 3s ease-in-out infinite;
+}
+@keyframes bdfkaDevPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, .3); }
+  50% { box-shadow: 0 0 40px rgba(34, 211, 238, .6); }
+}
+
+/* ============================================================
+   ТЕМА 2: Школьная — фон школьной доски, клетка, зелёные акценты
+   ============================================================ */
+body.theme-school {
+  --orange: #2E7D32;
+  --orange-dark: #1B5E20;
+  --orange-light: #66BB6A;
+  --glow: rgba(46, 125, 50, 0.5);
+  --bg: #1A2B1F;
+  --bg2: #223328;
+  --card: #2D4034;
+  --card2: #3A5142;
+  --text: #F1F8E9;
+  --muted: #A5C4A8;
+  --green: #8BC34A;
+}
+
+/* Фон: школьная зелёная доска + клетка тетради + лёгкий меловой шум */
+body.theme-school::before {
+  background:
+    /* Пятна мела */
+    radial-gradient(circle at 15% 25%, rgba(255,255,255,.06), transparent 30%),
+    radial-gradient(circle at 85% 70%, rgba(255,255,255,.05), transparent 35%),
+    radial-gradient(circle at 50% 90%, rgba(139,195,74,.05), transparent 40%),
+    /* Клетка тетради */
+    linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px),
+    /* Основной фон — тёмная доска */
+    linear-gradient(180deg, #1A2B1F 0%, #14221A 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 32px 32px, 32px 32px, 100% 100%;
+}
+
+/* Лёгкий шум мела поверх всего */
+body.theme-school::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: .35;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,.025) 1px, transparent 1px),
+    radial-gradient(circle at 60% 80%, rgba(255,255,255,.02) 1px, transparent 1px),
+    radial-gradient(circle at 80% 20%, rgba(255,255,255,.02) 1px, transparent 1px);
+  background-size: 200px 200px, 180px 180px, 220px 220px;
+}
+
+body.theme-school .stage {
+  background: transparent;
+}
+
+/* Видео-плитки — как тетрадные карточки на доске */
+body.theme-school .video-tile {
+  border: 2px solid rgba(139, 195, 74, .3);
+  box-shadow:
+    0 8px 25px rgba(0,0,0,.5),
+    0 0 0 1px rgba(255,255,255,.05) inset,
+    0 0 30px rgba(46,125,50,.15);
+  background: #1F3026;
+  border-radius: 14px;
+}
+
+body.theme-school .video-tile.speaking {
+  border-color: #8BC34A;
+  box-shadow:
+    0 0 0 3px rgba(139, 195, 74, .35),
+    0 0 40px rgba(139, 195, 74, .5),
+    0 8px 30px rgba(0,0,0,.5);
+}
+
+/* Аватарка в плитке */
+body.theme-school .video-tile .avatar {
+  background: linear-gradient(135deg, #1F3026, #2D4034);
+  color: #8BC34A;
+  font-family: 'Comic Sans MS', 'Georgia', serif;
+}
+
+/* Кнопки управления — как мелки */
+body.theme-school .ctrl {
+  background: linear-gradient(180deg, rgba(139,195,74,.15), rgba(46,125,50,.08));
+  border: 1px solid rgba(139,195,74,.35);
+  color: #F1F8E9;
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.3);
+}
+
+body.theme-school .ctrl::before {
+  content: '';
+  position: absolute;
+  top: 4px; left: 4px; right: 4px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.4), transparent);
+  border-radius: 2px;
+  opacity: .5;
+}
+
+body.theme-school .ctrl:hover {
+  background: linear-gradient(180deg, rgba(139,195,74,.25), rgba(46,125,50,.15));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(139,195,74,.25);
+}
+
+body.theme-school .ctrl.active {
+  background: linear-gradient(135deg, #2E7D32, #1B5E20);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(139, 195, 74, .5), 0 4px 12px rgba(0,0,0,.4);
+}
+
+body.theme-school .controls {
+  background: rgba(45, 64, 52, .95);
+  border: 1px solid rgba(139, 195, 74, .35);
+  box-shadow: 0 20px 60px rgba(0,0,0,.7), 0 0 30px rgba(46,125,50,.15);
+}
+
+/* Топбар — как деревянная рамка */
+body.theme-school .room-info {
+  background: rgba(45, 64, 52, .95);
+  border: 1px solid rgba(139, 195, 74, .35);
+  box-shadow: 0 4px 15px rgba(0,0,0,.4);
+}
+
+body.theme-school .room-id {
+  color: #8BC34A;
+  text-shadow: 0 0 10px rgba(139, 195, 74, .4);
+  font-family: 'Comic Sans MS', 'Consolas', monospace;
+}
+
+body.theme-school .rec-dot::before {
+  background: #8BC34A;
+  box-shadow: 0 0 12px #8BC34A;
+}
+
+/* Чат — тетрадный лист */
+body.theme-school .chat {
+  background: #223328;
+  border-left: 2px solid rgba(139, 195, 74, .35);
+  box-shadow: -10px 0 40px rgba(0,0,0,.5);
+}
+
+body.theme-school .msg {
+  background: rgba(241, 248, 233, .06);
+  border-left: 3px solid rgba(139, 195, 74, .4);
+  font-family: 'Georgia', serif;
+}
+
+body.theme-school .msg.own {
+  background: rgba(139, 195, 74, .15);
+  border-left: none;
+  border-right: 3px solid rgba(139, 195, 74, .6);
+}
+
+body.theme-school .msg-sender {
+  color: #8BC34A;
+  font-family: 'Comic Sans MS', serif;
+}
+
+/* Аватарки — как ученические бейджи */
+body.theme-school .p-avatar,
+body.theme-school .dm-avatar {
+  background: linear-gradient(135deg, #2E7D32, #8BC34A);
+  border: 2px solid rgba(255,255,255,.2);
+  box-shadow: 0 4px 12px rgba(46,125,50,.4);
+  font-family: 'Comic Sans MS', serif;
+}
+
+body.theme-school .p-avatar.admin {
+  background: linear-gradient(135deg, #F5A623, #E05520);
+  box-shadow: 0 0 20px rgba(245,166,35,.6);
+}
+
+/* Панель участников */
+body.theme-school .participants {
+  background: #223328;
+  border-left: 2px solid rgba(139, 195, 74, .35);
+  box-shadow: -10px 0 40px rgba(0,0,0,.5);
+}
+
+body.theme-school .participant:hover {
+  background: rgba(139, 195, 74, .12);
+}
+
+body.theme-school .participant.self {
+  background: rgba(139, 195, 74, .08);
+  border-left: 3px solid #8BC34A;
+}
+
+/* Доска — как зелёная доска в классе */
+body.theme-school .board {
+  background: #1B3A25;
+  border: 4px solid #6D4C41;
+  box-shadow:
+    inset 0 0 60px rgba(0,0,0,.5),
+    0 0 40px rgba(0,0,0,.5),
+    0 0 0 2px rgba(139, 195, 74, .2);
+  border-radius: 6px;
+}
+
+body.theme-school .board-toolbar,
+body.theme-school .board-settings {
+  background: rgba(45, 64, 52, .95);
+  border-color: rgba(139, 195, 74, .4);
+}
+
+body.theme-school .tool.active {
+  background: #8BC34A;
+  color: #1A2B1F;
+}
+
+/* Модалки */
+body.theme-school .modal-card {
+  background: #2D4034;
+  border: 2px solid rgba(139, 195, 74, .4);
+  box-shadow: 0 0 50px rgba(46,125,50,.25), 0 30px 80px rgba(0,0,0,.8);
+}
+
+/* Кнопки */
+body.theme-school .btn-primary {
+  background: linear-gradient(135deg, #2E7D32, #1B5E20);
+}
+
+body.theme-school .chat-tab.active {
+  background: #2E7D32;
+  color: #fff;
+}
+
+body.theme-school .send-btn {
+  background: linear-gradient(135deg, #2E7D32, #1B5E20);
+}
+
+/* Плитка self — лёгкое покачивание как мел по доске */
+body.theme-school #tile-self {
+  animation: schoolChalkWobble 4s ease-in-out infinite;
+}
+
+@keyframes schoolChalkWobble {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(0.15deg); }
+  75% { transform: rotate(-0.15deg); }
+}
+
+/* Специальный декоративный элемент — "мелок" в углу */
+body.theme-school .stage::after {
+  content: '';
+  position: absolute;
+  bottom: 180px;
+  left: 20px;
+  width: 60px;
+  height: 8px;
+  background: linear-gradient(90deg, #FFF, #F5F5DC);
+  border-radius: 4px;
+  transform: rotate(-15deg);
+  opacity: .15;
+  pointer-events: none;
+  z-index: 1;
+  box-shadow: 0 0 20px rgba(255,255,255,.3);
+}
+
+/* ============================================================
+   ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ
+   ============================================================ */
+.theme-switcher {
+  position: absolute;
+  top: 70px;
+  right: 16px;
+  z-index: 30;
+  display: flex;
+  gap: 6px;
+  background: rgba(26, 34, 52, .95);
+  backdrop-filter: blur(12px);
+  padding: 6px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 107, 53, .3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .5);
+  animation: popIn .3s;
+  flex-wrap: wrap;
+  max-width: calc(100% - 32px);
+}
+.theme-switcher.hidden { display: none; }
+
+.theme-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.theme-btn:hover {
+  background: rgba(255, 107, 53, .15);
+  color: var(--text);
+}
+.theme-btn.active {
+  background: linear-gradient(135deg, #FF6B35, #E05520);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(255,107,53,.5);
+}
+.theme-btn[data-theme="bdfkaDev"].active {
+  background: linear-gradient(135deg, #3B82F6, #22D3EE);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, .6), 0 0 20px rgba(34, 211, 238, .4);
+}
+.theme-btn[data-theme="school"].active {
+  background: linear-gradient(135deg, #2E7D32, #8BC34A);
+  box-shadow: 0 4px 12px rgba(46, 125, 50, .6), 0 0 20px rgba(139, 195, 74, .4);
+}
+
+.theme-btn .dot-color {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.theme-btn[data-theme="default"] .dot-color {
+  background: linear-gradient(135deg, #FF6B35, #FF8C5A);
+}
+.theme-btn[data-theme="bdfkaDev"] .dot-color {
+  background: linear-gradient(135deg, #3B82F6, #22D3EE);
+  box-shadow: 0 0 8px #22D3EE;
+}
+.theme-btn[data-theme="school"] .dot-color {
+  background: linear-gradient(135deg, #2E7D32, #8BC34A);
+  box-shadow: 0 0 8px #8BC34A;
+}
+
 /* ============ АДАПТИВ ============ */
 @media (max-width:768px){
   .room.chat-open{padding-right:0}
@@ -719,6 +1176,8 @@ input[type=checkbox].hidden-cb:checked + .switch::after{transform:translateX(16p
     grid-template-columns:1fr;
   }
   .admin{width:calc(100% - 32px);right:16px}
+  .theme-switcher{top: 60px; right: 8px; left: 8px; max-width: none;}
+  .theme-btn{padding: 6px 10px; font-size: 11px;}
 }
 </style>
 </head>
@@ -780,6 +1239,22 @@ input[type=checkbox].hidden-cb:checked + .switch::after{transform:translateX(16p
 
     <!-- Реакции -->
     <div class="reactions-layer" id="reactionsLayer"></div>
+
+    <!-- Переключатель темы (только bdfka) -->
+    <div class="theme-switcher hidden" id="themeSwitcher">
+      <button class="theme-btn active" data-theme="default">
+        <span class="dot-color"></span>
+        Оранжевая
+      </button>
+      <button class="theme-btn" data-theme="bdfkaDev">
+        <span class="dot-color"></span>
+        bdfkaDev
+      </button>
+      <button class="theme-btn" data-theme="school">
+        <span class="dot-color"></span>
+        Школьная
+      </button>
+    </div>
 
     <!-- Админ -->
     <div class="admin" id="adminPanel">
@@ -931,7 +1406,7 @@ input[type=checkbox].hidden-cb:checked + .switch::after{transform:translateX(16p
 <script src="/socket.io/socket.io.js"></script>
 <script>
 /* ============================================================
-   SinkConferentions — Комната v2
+   SinkConferentions — Комната v3 (3 темы)
    ============================================================ */
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => document.querySelectorAll(s);
@@ -960,6 +1435,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   $('#roomIdLabel').textContent = roomId;
   if (isAdmin) $('#adminPanel').classList.add('show');
 
+  // Тема
+  initTheme();
+
   // Медиа
   try {
     state.localStream = await navigator.mediaDevices.getUserMedia({
@@ -982,6 +1460,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log('[join-room] response:', res);
         if (res?.error) { toast(res.error, 'error'); return; }
         isAdmin = res.isAdmin || isAdmin;
+        if (isAdmin) $('#adminPanel').classList.add('show');
         if (res.participants) {
           state.participants = res.participants;
           renderParticipants(res.participants);
@@ -992,6 +1471,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     state.socket.on('connect_error', (err) => {
       console.error('[socket] connect error:', err);
       toast('Ошибка подключения к серверу', 'error');
+    });
+
+    state.socket.on('reconnect', () => {
+      toast('Соединение восстановлено', 'success');
+      state.socket.emit('join-room', { roomId, userName }, () => {});
     });
 
     bindSocketEvents();
@@ -1005,7 +1489,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   bindModals();
   initParticipants();
 
-  // Загрузить историю общего чата
+  // История чата
   if (state.socket) {
     state.socket.emit('load-chat-history', { roomId }, ({ messages }) => {
       (messages || []).forEach(m => renderMsg($('#msgsGeneral'), {
@@ -1020,6 +1504,63 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   updateParticipantCount();
 });
+
+// ============================================================
+// ТЕМА
+// ============================================================
+function initTheme() {
+  const isBdfka = userName === 'bdfka' || userName === 'Семён Иванов' ||
+                  session?.login === 'bdfka';
+
+  const switcher = $('#themeSwitcher');
+  if (!switcher) return;
+
+  if (!isBdfka) {
+    switcher.classList.add('hidden');
+    return;
+  }
+
+  switcher.classList.remove('hidden');
+
+  const saved = localStorage.getItem('sink_theme') || 'default';
+  applyTheme(saved);
+
+  switcher.querySelectorAll('.theme-btn').forEach(btn => {
+    btn.onclick = () => {
+      const theme = btn.dataset.theme;
+      applyTheme(theme);
+      localStorage.setItem('sink_theme', theme);
+
+      const names = {
+        default: '🎨 Оранжевая тема активирована',
+        bdfkaDev: '🎨 Тема bdfkaDev активирована',
+        school: '🎓 Школьная тема активирована'
+      };
+      toast(names[theme] || 'Тема изменена', 'success');
+    };
+  });
+}
+
+function applyTheme(theme) {
+  document.body.classList.remove('theme-bdfkaDev', 'theme-school');
+  if (theme === 'bdfkaDev') document.body.classList.add('theme-bdfkaDev');
+  if (theme === 'school') document.body.classList.add('theme-school');
+
+  const switcher = $('#themeSwitcher');
+  if (switcher) {
+    switcher.querySelectorAll('.theme-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === theme);
+    });
+  }
+
+  // Меняем цвет кисти на доске в зависимости от темы
+  const picker = $('#colorPicker');
+  if (picker) {
+    if (theme === 'bdfkaDev') picker.value = '#22D3EE';
+    else if (theme === 'school') picker.value = '#F1F8E9';
+    else picker.value = '#FF6B35';
+  }
+}
 
 // ============================================================
 // ВИДЕО
@@ -1054,7 +1595,6 @@ function updateParticipantCount() {
 // ============================================================
 function bindSocketEvents() {
   state.socket.on('room-update', (data) => {
-    console.log('[room-update]', data.participants.length, 'participants');
     state.participants = data.participants;
     renderParticipants(data.participants);
     updateParticipantCount();
@@ -1156,7 +1696,9 @@ function createPeerConnection(peerId, isInitiator) {
   const pc = new RTCPeerConnection({
     iceServers: [
       { urls: 'stun:stun.l.google.com:19302' },
-      { urls: 'stun:stun1.l.google.com:19302' }
+      { urls: 'stun:stun1.l.google.com:19302' },
+      { urls: 'turn:openrelay.metered.ca:80', username: 'openrelayproject', credential: 'openrelayproject' },
+      { urls: 'turn:openrelay.metered.ca:443', username: 'openrelayproject', credential: 'openrelayproject' }
     ]
   });
 
@@ -1446,7 +1988,7 @@ function redraw() {
   if (board.current) all.push(board.current);
   all.forEach(s => {
     ctx.beginPath();
-    ctx.strokeStyle = s.tool === 'eraser' ? '#14100F' : s.color;
+    ctx.strokeStyle = s.tool === 'eraser' ? 'rgba(0,0,0,1)' : s.color;
     ctx.lineWidth = s.tool === 'eraser' ? s.width * 3 : s.width;
     ctx.lineCap = 'round'; ctx.lineJoin = 'round';
     s.points.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
